@@ -4,6 +4,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import main.Game;
+import main.dungeon.Camera;
+import main.dungeon.Dungeon;
 import main.util.Spritesheet;
 
 public class Player extends Entity {
@@ -70,23 +73,23 @@ public class Player extends Entity {
 	public void tick() {
 		moved = false;
 
-		if (up) {
+		if (up && Dungeon.isFree((int) x, (int) (y - speed))) {
 			moved = true;
 			y -= speed;
 		}
 
-		if (down) {
+		if (down && Dungeon.isFree((int) x, (int) (y + speed))) {
 			moved = true;
 			y += speed;
 		}
 
-		if (right) {
+		if (right && Dungeon.isFree((int) (x + speed), (int) y)) {
 			moved = true;
 			x += speed;
 			dir = dirRight;
 		}
 
-		if (left) {
+		if (left && Dungeon.isFree((int) (x - speed), (int) y)) {
 			moved = true;
 			x -= speed;
 			dir = dirLeft;
@@ -102,21 +105,24 @@ public class Player extends Entity {
 				index = 0;
 			}
 		}
+
+		Camera.x = Camera.clamp((int) (x - (Game.WIDTH / 2)), 0, Dungeon.WIDTH * 16 - Game.WIDTH);
+		Camera.y = Camera.clamp((int) (y - (Game.HEIGHT / 2)), 0, Dungeon.HEIGHT * 16 - Game.HEIGHT);
 	}
 
 	@Override
 	public void render(Graphics g) {
 		if (dir == dirRight) {
 			if (moved) {
-				g.drawImage(movingRightPlayer[index], (int) (x), (int) (y), width, height, null);
+				g.drawImage(movingRightPlayer[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
 			} else {
-				g.drawImage(idleRightPlayer[index], (int) (x), (int) (y), width, height, null);
+				g.drawImage(idleRightPlayer[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
 			}
 		} else {
 			if (moved) {
-				g.drawImage(movingLeftPlayer[index], (int) (x), (int) (y), width, height, null);
+				g.drawImage(movingLeftPlayer[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
 			} else {
-				g.drawImage(idleLeftPlayer[index], (int) (x), (int) (y), width, height, null);
+				g.drawImage(idleLeftPlayer[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
 			}
 		}
 	}

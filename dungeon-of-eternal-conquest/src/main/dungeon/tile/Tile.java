@@ -3,6 +3,8 @@ package main.dungeon.tile;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import main.dungeon.Camera;
+
 public class Tile {
 
 	private final int x;
@@ -21,7 +23,7 @@ public class Tile {
 	}
 
 	public void render(Graphics g) {
-		g.drawImage(sprite, x, y, width, height, null);
+		g.drawImage(sprite, x - Camera.x, y - Camera.y, width, height, null);
 	}
-	
+
 }
