@@ -9,31 +9,41 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import javax.swing.JFrame;
+
+import main.dungeon.Dungeon;
+import main.entities.Player;
+import main.util.Spritesheet;
 
 public class Game extends Canvas implements Runnable, KeyListener {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Thread thread;
 	private boolean isRunning;
-	
+
 	public static final int WIDTH = 240;
 	public static final int HEIGHT = 160;
 	public static final int SCALE = 3;
-	
+
 	private boolean showFPS = true;
 	private int fps;
-	
+
 	private final BufferedImage renderer;
-	
-	public Game() {
+
+	private final Spritesheet spritesheet;
+
+	private Player player;
+	private Dungeon dungeon;
+
+	public Game() throws IOException {
 		this.addKeyListener(this);
 		this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
-		
+
 		JFrame frame = new JFrame();
-		
+
 		frame.setTitle("Dungeon of eternal conquest");
 		frame.add(this);
 		frame.setResizable(false);
@@ -41,8 +51,12 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
-		
+
 		renderer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+
+		spritesheet = new Spritesheet("/spritesheet-tiles.png");
+		player = new Player(100, 60, 16, 16, 1, 100);
+		dungeon = new Dungeon("/level-01.png", spritesheet, player);
 	}
 
 	public synchronized void start() {
@@ -50,7 +64,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		isRunning = true;
 		thread.start();
 	}
-	
+
 	public synchronized void stop() {
 		isRunning = false;
 
@@ -60,58 +74,88 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void tick() {
-		// Code
+		dungeon.tick();
 	}
-	
+
 	public void render() {
 		BufferStrategy bs = this.getBufferStrategy();
-		
+
 		if (bs == null) {
 			this.createBufferStrategy(3);
 			return;
 		}
-		
+
 		Graphics render = renderer.getGraphics();
-		
+
 		render.setColor(Color.BLACK);
 		render.fillRect(0, 0, WIDTH, HEIGHT);
-		
-		// Code
-		
+
+		dungeon.render(render);
+
 		render.dispose();
 
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(renderer, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
-		
+
 		// Code
-		
+
 		if (showFPS) {
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("arial", Font.BOLD, 20));
 			g.setColor(Color.WHITE);
 			g.drawString("FPS: " + fps, 620, 32);
 		}
-		
+
 		bs.show();
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_W) {
+			player.moveUp();
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_S) {
+			player.moveDown();
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_D) {
+			player.moveRight();
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_A) {
+			player.moveLeft();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_W) {
+			player.stopUp();
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_S) {
+			player.stopDown();
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_D) {
+			player.stopRight();
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_A) {
+			player.stopLeft();
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_F3) {
+			showFPS = !showFPS;
+		}
 	}
 	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// Code
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// Code
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_F3 || e.getKeyCode() == KeyEvent.VK_F3) {
-			showFPS = !showFPS;
-		}
 	}
 
 	@Override
@@ -148,9 +192,13 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 		this.stop();
 	}
-	
+
 	public static void main(String[] args) {
-		new Game().start();
+		try {
+			new Game().start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 }
