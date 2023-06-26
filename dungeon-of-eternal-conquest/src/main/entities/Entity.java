@@ -2,44 +2,100 @@ package main.entities;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
-public class Entity {
-	
+import main.dungeon.Dungeon;
+import main.util.Spritesheet;
+
+public abstract class Entity {
+
 	protected double x;
 	protected double y;
 	protected final int width;
 	protected final int height;
+	
+	protected double maskX;
+	protected double maskY;
+	protected int maskW;
+	protected int maskH;
 
 	protected boolean up;
 	protected boolean down;
 	protected boolean right;
 	protected boolean left;
-	
+
 	protected double speed;
-	
+
 	protected double life;
-	protected final double maxLife;
+	protected double maxLife;
 
-	protected int maskX;
-	protected int maskY;
-	protected int maskW;
-	protected int maskH;
+	protected int dir;
+	protected final int dirRight;
+	protected final int dirLeft;
 
-	public Entity(double x, double y, int width, int height, double speed, double maxLife) {
+	protected int frames;
+	protected final int maxFrames;
+
+	protected int index;
+	protected final int maxIndex;
+
+	protected boolean moved;
+
+	protected final BufferedImage[] idleRightEntity;
+	protected final BufferedImage[] idleLeftEntity;
+
+	protected final BufferedImage[] movingRightEntity;
+	protected final BufferedImage[] movingLeftEntity;
+
+	public Entity(double x, double y, int width, int height, double speed, double maxLife, int maxFrames, int maxIndex, String spritePath) throws IOException {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		
+		this.updateMask();
 
 		this.speed = speed;
 
-		this.maskX = 0;
-		this.maskY = 0;
-		this.maskW = width;
-		this.maskH = height;
-		
 		this.maxLife = maxLife;
 		this.life = maxLife;
+		
+		this.dirRight = 1;
+		this.dirLeft = 0;
+		this.dir = this.dirRight;
+
+		this.frames = 0;
+		this.maxFrames = maxFrames;
+
+		this.index = 0;
+		this.maxIndex = maxIndex;
+		
+		this.moved = false;
+
+		idleRightEntity = new BufferedImage[this.maxIndex];
+		idleLeftEntity = new BufferedImage[this.maxIndex];
+
+		movingRightEntity = new BufferedImage[this.maxIndex];
+		movingLeftEntity = new BufferedImage[this.maxIndex];
+		
+		Spritesheet spritesheet = new Spritesheet(spritePath);
+
+		for (int i = 0; i < idleRightEntity.length; i++) {
+			idleRightEntity[i] = spritesheet.getSprite(0 + (i * 16), 0, 16, 16);
+		}
+
+		for (int i = 0; i < idleLeftEntity.length; i++) {
+			idleLeftEntity[i] = spritesheet.getSprite(0 + (i * 16), 16, 16, 16);
+		}
+
+		for (int i = 0; i < movingRightEntity.length; i++) {
+			movingRightEntity[i] = spritesheet.getSprite(0 + (i * 16), 32, 16, 16);
+		}
+
+		for (int i = 0; i < movingLeftEntity.length; i++) {
+			movingLeftEntity[i] = spritesheet.getSprite(0 + (i * 16), 48, 16, 16);
+		}
 	}
 
 	public double getX() {
@@ -65,76 +121,71 @@ public class Entity {
 	public void setPosition(double x, double y) {
 		this.x = x;
 		this.y = y;
+
+		this.updateMask();
 	}
-	
+
+	protected void updateMask() {
+		this.maskX = x;
+		this.maskY = y;
+		this.maskW = width;
+		this.maskH = height;
+	}
+
 	public boolean isMoveUp() {
 		return up;
 	}
-	
+
 	public void moveUp() {
 		up = true;
 	}
-	
+
 	public void stopUp() {
 		up = false;
 	}
-	
+
 	public boolean isMoveDown() {
 		return down;
 	}
-	
+
 	public void moveDown() {
 		down = true;
 	}
-	
+
 	public void stopDown() {
 		down = false;
 	}
-	
+
 	public boolean isMoveRight() {
 		return right;
 	}
-	
+
 	public void moveRight() {
 		right = true;
 	}
-	
+
 	public void stopRight() {
 		right = false;
 	}
-	
+
 	public boolean isMoveLeft() {
 		return left;
 	}
-	
+
 	public void moveLeft() {
 		left = true;
 	}
-	
+
 	public void stopLeft() {
 		left = false;
 	}
 
-	public void setMask(int maskX, int maskY, int maskW, int maskH) {
-		this.maskX = maskX;
-		this.maskY = maskY;
-		this.maskW = maskW;
-		this.maskH = maskH;
-	}
-	
-	public boolean isColidding(Entity e) {
-		Rectangle e1Mask = new Rectangle((int) this.x + this.maskX, (int) this.y + this.maskY, this.maskW, this.height);
-		Rectangle e2Mask = new Rectangle((int) e.x + e.maskX, (int) e.y + e.maskY, e.maskW, e.height);
-
-		return e1Mask.intersects(e2Mask);
+	public Rectangle getRectangle() {
+		return new Rectangle((int) maskX, (int) maskY, maskW, maskH);
 	}
 
-	public void tick() {
-		// Code
-	}
+	public abstract void tick(Dungeon dungeon);
 
-	public void render(Graphics g) {
-		// Code
-	}
-	
+	public abstract void render(Graphics graphics);
+
 }

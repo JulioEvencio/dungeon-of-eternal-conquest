@@ -1,39 +1,56 @@
 package main.dungeon;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import main.Game;
 import main.dungeon.tile.Floor;
 import main.dungeon.tile.Stairway;
-import main.dungeon.tile.Tile;
 import main.dungeon.tile.Wall;
+import main.entities.Entity;
 import main.entities.Player;
 import main.util.Spritesheet;
 
 public class Dungeon {
 
-	public static int WIDTH;
-	public static int HEIGHT;
-
-	private static Tile[] tiles;
+	public final int WIDTH;
+	public final int HEIGHT;
+	
+	public final int UP;
+	public final int DOWN;
+	public final int RIGHT;
+	public final int LEFT;
 
 	private Player player;
+	
+	private final List<Wall> walls;
+	private final List<Floor> floors;
+	private final List<Stairway> stairways;
 
 	public Dungeon(String path, Spritesheet spritesheet, Player player) throws IOException {
+		this.UP = 1;
+		this.DOWN = 2;
+		this.RIGHT = 3;
+		this.LEFT = 4;
+		
 		this.player = player;
+
+		this.walls = new ArrayList<>();
+		this.floors = new ArrayList<>();
+		this.stairways = new ArrayList<>();
 
 		BufferedImage map = ImageIO.read(this.getClass().getResource(path));
 
 		int[] pixels = new int[map.getWidth() * map.getHeight()];
 
-		WIDTH = map.getWidth();
-		HEIGHT = map.getHeight();
-
-		tiles = new Tile[map.getWidth() * map.getHeight()];
+		this.WIDTH = map.getWidth();
+		this.HEIGHT = map.getHeight();
 
 		map.getRGB(0, 0, map.getWidth(), map.getHeight(), pixels, 0, map.getWidth());
 
@@ -41,17 +58,19 @@ public class Dungeon {
 			for (int y = 0; y < map.getHeight(); y++) {
 				int currentPixel = pixels[x + (y * map.getWidth())];
 
-				tiles[x + (y * WIDTH)] = new Floor(x * 16, y * 16, 16, 16, spritesheet);
-
 				switch (currentPixel) {
+					case 0xFFFFFFFF:
+						this.floors.add(new Floor(x * 16, y * 16, 16, 16, spritesheet));
+						break;
 					case 0xFF000000:
-						tiles[x + (y * WIDTH)] = new Wall(x * 16, y * 16, 16, 16, spritesheet);
+						this.walls.add(new Wall(x * 16, y * 16, 16, 16, spritesheet));
 						break;
 					case 0xFFFF0000:
-						tiles[x + (y * WIDTH)] = new Stairway(x * 16, y * 16, 16, 16, spritesheet);
+						this.stairways.add(new Stairway(x * 16, y * 16, 16, 16, spritesheet));
 						break;
 					case 0xFF0000FF:
 						this.player.setPosition(x * 16, y * 16);
+						this.floors.add(new Floor(x * 16, y * 16, 16, 16, spritesheet));
 						break;
 				}
 			}
@@ -59,47 +78,81 @@ public class Dungeon {
 	}
 
 	public void tick() {
-		player.tick();
+		player.tick(this);
 	}
 
-	public void render(Graphics g) {
-		int xStart = Camera.x >> 4;
-		int yStart = Camera.y >> 4;
-
-		int xFinal = xStart + (Game.WIDTH >> 4);
-		int yFinal = yStart + (Game.HEIGHT >> 4);
-
-		for (int x = xStart; x <= xFinal; x++) {
-			for (int y = yStart; y <= yFinal; y++) {
-				if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT) {
-					continue;
-				}
-
-				Tile tile = tiles[x + (y * WIDTH)];
-				tile.render(g);
-			}
+	public void render(Graphics graphics) {
+		for (Floor floor : floors) {
+			floor.render(graphics);
+		}
+		
+		for (Wall wall: walls) {
+			wall.render(graphics);
+		}
+		
+		for (Stairway stairway : stairways) {
+			stairway.render(graphics);
 		}
 
-		player.render(g);
+		player.render(graphics);
+	}
+	
+	public boolean isFree(Entity entity, int dir) {
+		Rectangle rectangle = entity.getRectangle();
+		
+		if (dir == UP) {
+			rectangle.y -= entity.getSpeed();
+		} else if (dir == DOWN) {
+			rectangle.y += entity.getSpeed();
+		} else if (dir == RIGHT) {
+			rectangle.x += entity.getSpeed();
+		} else if (dir == LEFT) {
+			rectangle.x -= entity.getSpeed();
+		}
+		
+		for (Wall wall: walls) {
+			if (rectangle.intersects(wall.getRectangle())) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_W) {
+			player.moveUp();
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_S) {
+			player.moveDown();
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_D) {
+			player.moveRight();
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_A) {
+			player.moveLeft();
+		}
 	}
 
-	public static boolean isFree(int xNext, int yNext) {
-		int tileSize = 16;
-		
-		int x1 = xNext / tileSize;
-		int y1 = yNext / tileSize;
+	public void keyReleased(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_W) {
+			player.stopUp();
+		}
 
-		int x2 = (xNext + tileSize - 1) / tileSize;
-		int y2 = yNext / tileSize;
+		if (e.getKeyCode() == KeyEvent.VK_S) {
+			player.stopDown();
+		}
 
-		int x3 = xNext / tileSize;
-		int y3 = (yNext + tileSize - 1) / tileSize;
+		if (e.getKeyCode() == KeyEvent.VK_D) {
+			player.stopRight();
+		}
 
-		int x4 = (xNext + tileSize - 1) / tileSize;
-		int y4 = (yNext + tileSize - 1) / tileSize;
-
-		return !(tiles[x1 + (y1 * Dungeon.WIDTH)] instanceof Wall || tiles[x2 + (y2 * Dungeon.WIDTH)] instanceof Wall
-				|| tiles[x3 + (y3 * Dungeon.WIDTH)] instanceof Wall || tiles[x4 + (y4 * Dungeon.WIDTH)] instanceof Wall);
+		if (e.getKeyCode() == KeyEvent.VK_A) {
+			player.stopLeft();
+		}
 	}
 	
 }

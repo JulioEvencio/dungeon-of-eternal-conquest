@@ -29,7 +29,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static final int HEIGHT = 160;
 	public static final int SCALE = 3;
 
-	private boolean showFPS = true;
+	private boolean showFPS = false;
 	private int fps;
 
 	private final BufferedImage renderer;
@@ -55,9 +55,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 		renderer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
-		spritesheet = new Spritesheet("/spritesheet-tiles.png");
-		player = new Player(100, 60, 16, 16, 1, 100);
-		dungeon = new Dungeon("/level-01.png", spritesheet, player);
+		spritesheet = new Spritesheet("/dungeon/tiles.png");
+
+		player = new Player();
+		dungeon = new Dungeon("/levels/level-01.png", spritesheet, player);
 	}
 
 	public synchronized void start() {
@@ -114,40 +115,12 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_W) {
-			player.moveUp();
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_S) {
-			player.moveDown();
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_D) {
-			player.moveRight();
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_A) {
-			player.moveLeft();
-		}
+		dungeon.keyPressed(e);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_W) {
-			player.stopUp();
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_S) {
-			player.stopDown();
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_D) {
-			player.stopRight();
-		}
-
-		if (e.getKeyCode() == KeyEvent.VK_A) {
-			player.stopLeft();
-		}
+		dungeon.keyReleased(e);
 		
 		if (e.getKeyCode() == KeyEvent.VK_F3) {
 			showFPS = !showFPS;

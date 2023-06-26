@@ -1,6 +1,7 @@
 package main.dungeon.tile;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import main.dungeon.Camera;
@@ -20,6 +21,10 @@ public class Tile {
 		this.width = width;
 		this.height = height;
 		this.sprite = sprite;
+	}
+
+	public Rectangle getRectangle() {
+		return new Rectangle(x, y, width, height);
 	}
 
 	public void render(Graphics g) {
