@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import main.dungeon.Dungeon;
 import main.entities.Player;
@@ -196,8 +197,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static void main(String[] args) {
 		try {
 			new Game().start();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		}
 	}
 
