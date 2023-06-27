@@ -7,7 +7,7 @@ import main.dungeon.Dungeon;
 public class Slime extends Entity {
 
 	public Slime() throws IOException {
-		super(0, 0, 16, 16, 0.5, 1, 5, 6, "/entities/slime.png");
+		super(0, 0, 16, 16, 0.5, 1, 1, 0, 1, 5, 6, "/entities/slime.png");
 	}
 	
 	@Override
@@ -23,7 +23,7 @@ public class Slime extends Entity {
 		moved = false;
 		
 		if (dungeon.player.getRectangle().intersects(this.getRectangle())) {
-			// Causar dano ao player
+			dungeon.player.takeDamage(this.dealDamage());
 		} else {
 			if (maskX < dungeon.player.getX() && dungeon.isFree(this, dungeon.RIGHT)) {
 				moved = true;

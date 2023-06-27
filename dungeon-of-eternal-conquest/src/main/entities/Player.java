@@ -9,7 +9,7 @@ import main.dungeon.Dungeon;
 public class Player extends Entity {
 
 	public Player() throws IOException {
-		super(0, 0, 16, 16, 1, 100, 5, 6, "/entities/player.png");
+		super(0, 0, 16, 16, 1, 1, 5, 2, 3, 5, 6, "/entities/player.png");
 	}
 
 	@Override
@@ -22,6 +22,8 @@ public class Player extends Entity {
 
 	@Override
 	public void tick(Dungeon dungeon) {
+		System.out.println("Life: " + life);
+		
 		moved = false;
 
 		if (up && dungeon.isFree(this, dungeon.UP)) {

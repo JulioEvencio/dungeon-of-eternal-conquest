@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Random;
 
 import main.dungeon.Camera;
 import main.dungeon.Dungeon;
@@ -27,6 +29,12 @@ public abstract class Entity {
 	protected boolean left;
 
 	protected double speed;
+	
+	protected double minDamage;
+	protected double maxDamage;
+
+	protected long shieldTime;
+	protected LocalDateTime shieldDamage;
 
 	protected double life;
 	protected double maxLife;
@@ -49,7 +57,7 @@ public abstract class Entity {
 	protected final BufferedImage[] movingRightEntity;
 	protected final BufferedImage[] movingLeftEntity;
 
-	public Entity(double x, double y, int width, int height, double speed, double maxLife, int maxFrames, int maxIndex, String spritePath) throws IOException {
+	public Entity(double x, double y, int width, int height, double speed, double minDamage, double maxDamage, long shieldTime, double maxLife, int maxFrames, int maxIndex, String spritePath) throws IOException {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -58,6 +66,12 @@ public abstract class Entity {
 		this.updateMask();
 
 		this.speed = speed;
+		
+		this.minDamage = minDamage;
+		this.maxDamage = maxDamage;
+
+		this.shieldTime = shieldTime;
+		this.shieldDamage = LocalDateTime.now().plusSeconds(this.shieldTime);
 
 		this.maxLife = maxLife;
 		this.life = maxLife;
@@ -131,6 +145,22 @@ public abstract class Entity {
 		this.maskY = y;
 		this.maskW = width;
 		this.maskH = height;
+	}
+	
+	public double dealDamage() {
+		return minDamage + (maxDamage - minDamage) * new Random().nextDouble();
+	}
+	
+	public void takeDamage(double damage) {
+		if (shieldDamage.isBefore(LocalDateTime.now())) {
+			shieldDamage = LocalDateTime.now().plusSeconds(shieldTime);
+			life -= damage;
+		}
+	}
+	
+	public void updateDamage(double minDamage, double maxDamage) {
+		this.minDamage = minDamage;
+		this.maxDamage = maxDamage;
 	}
 
 	public boolean isMoveUp() {
