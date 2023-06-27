@@ -97,6 +97,8 @@ public class Menu {
 		} else if (currentOption == 1) {
 			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 204);
 		}
+		
+		graphics.drawString("Use W and S keys to move and space to select", Game.WIDTH * Game.SCALE / 2 - 305, 304);
 	}
 	
 	public void renderFullscreen(Graphics graphics, int width, int height) {
@@ -117,6 +119,8 @@ public class Menu {
 		} else if (currentOption == 1) {
 			graphics.drawString("-> ", width / 2 - 90, height / 2 - 50);
 		}
+		
+		graphics.drawString("Use W and S keys to move and space to select", width / 2 - 300, height / 2 + 50);
 	}
 
 }
