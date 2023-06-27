@@ -15,6 +15,7 @@ import main.dungeon.tile.Stairway;
 import main.dungeon.tile.Wall;
 import main.entities.Entity;
 import main.entities.Player;
+import main.entities.Slime;
 import main.util.Spritesheet;
 
 public class Dungeon {
@@ -27,11 +28,13 @@ public class Dungeon {
 	public final int RIGHT;
 	public final int LEFT;
 
-	private Player player;
+	public Player player;
 	
 	private final List<Wall> walls;
 	private final List<Floor> floors;
 	private final List<Stairway> stairways;
+	
+	private final List<Slime> slimes;
 
 	public Dungeon(String path, Spritesheet spritesheet, Player player) throws IOException {
 		this.UP = 1;
@@ -44,6 +47,8 @@ public class Dungeon {
 		this.walls = new ArrayList<>();
 		this.floors = new ArrayList<>();
 		this.stairways = new ArrayList<>();
+		
+		this.slimes = new ArrayList<>();
 
 		BufferedImage map = ImageIO.read(this.getClass().getResource(path));
 
@@ -65,6 +70,12 @@ public class Dungeon {
 					case 0xFF000000:
 						this.walls.add(new Wall(x * 16, y * 16, 16, 16, spritesheet));
 						break;
+					case 0xFF00FF00:
+						Slime slime = new Slime();
+						slime.setPosition(x * 16, y * 16);
+						this.slimes.add(slime);
+						this.floors.add(new Floor(x * 16, y * 16, 16, 16, spritesheet));
+						break;
 					case 0xFFFF0000:
 						this.stairways.add(new Stairway(x * 16, y * 16, 16, 16, spritesheet));
 						break;
@@ -78,6 +89,10 @@ public class Dungeon {
 	}
 
 	public void tick() {
+		for (Slime slime : slimes) {
+			slime.tick(this);
+		}
+		
 		player.tick(this);
 	}
 
@@ -92,6 +107,10 @@ public class Dungeon {
 		
 		for (Stairway stairway : stairways) {
 			stairway.render(graphics);
+		}
+		
+		for (Slime slime : slimes) {
+			slime.render(graphics);
 		}
 
 		player.render(graphics);

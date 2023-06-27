@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import main.dungeon.Camera;
 import main.dungeon.Dungeon;
 import main.util.Spritesheet;
 
@@ -186,6 +187,20 @@ public abstract class Entity {
 
 	public abstract void tick(Dungeon dungeon);
 
-	public abstract void render(Graphics graphics);
+	public void render(Graphics graphics) {
+		if (dir == dirRight) {
+			if (moved) {
+				graphics.drawImage(movingRightEntity[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
+			} else {
+				graphics.drawImage(idleRightEntity[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
+			}
+		} else {
+			if (moved) {
+				graphics.drawImage(movingLeftEntity[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
+			} else {
+				graphics.drawImage(idleLeftEntity[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
+			}
+		}
+	}
 
 }
