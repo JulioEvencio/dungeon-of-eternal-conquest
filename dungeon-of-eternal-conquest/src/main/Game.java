@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
@@ -24,13 +25,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	private Thread thread;
 	private boolean isRunning;
+	
+	private final JFrame frame;
 
 	public static final int WIDTH = 240;
 	public static final int HEIGHT = 160;
 	public static final int SCALE = 3;
 
-	private boolean showFPS = false;
+	private boolean showFPS;
 	private int fps;
+	
+	private boolean isFullscreen;
 
 	private final BufferedImage renderer;
 
@@ -40,18 +45,22 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private Dungeon dungeon;
 
 	public Game() throws IOException {
+		this.showFPS = false;
+		this.isFullscreen = false;
+		
 		this.addKeyListener(this);
+		
 		this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 
-		JFrame frame = new JFrame();
+		this.frame = new JFrame();
 
-		frame.setTitle("Dungeon of eternal conquest");
-		frame.add(this);
-		frame.setResizable(false);
-		frame.pack();
-		frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
+		this.frame.setTitle("Dungeon of eternal conquest");
+		this.frame.add(this);
+		this.frame.setResizable(false);
+		this.frame.pack();
+		this.frame.setLocationRelativeTo(null);
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setVisible(true);
 
 		renderer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
@@ -76,6 +85,19 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			e.printStackTrace();
 		}
 	}
+	
+	public void updateFullscreen() {
+		isFullscreen = !isFullscreen;
+		
+		if (isFullscreen) {
+			this.setPreferredSize(new Dimension(Toolkit.getDefaultToolkit().getScreenSize()));
+		} else {
+			this.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+		}
+		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+	}
 
 	public void tick() {
 		dungeon.tick();
@@ -99,7 +121,12 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		render.dispose();
 
 		Graphics g = bs.getDrawGraphics();
-		g.drawImage(renderer, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+		
+		if (isFullscreen) {
+			g.drawImage(renderer, 0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height, null);
+		} else {
+			g.drawImage(renderer, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+		}
 
 		// Code
 
@@ -107,7 +134,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("arial", Font.BOLD, 20));
 			g.setColor(Color.WHITE);
-			g.drawString("FPS: " + fps, 620, 32);
+			g.drawString("FPS: " + fps, frame.getWidth() - 100, 32);
 		}
 
 		bs.show();
@@ -121,6 +148,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		dungeon.keyReleased(e);
+		
+		if (e.getKeyCode() == KeyEvent.VK_F2) {
+			this.updateFullscreen();
+		}
 		
 		if (e.getKeyCode() == KeyEvent.VK_F3) {
 			showFPS = !showFPS;
@@ -139,7 +170,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		double ns = 1000000000 / amountOfTicks;
 		double delta = 0.0;
 
-		int frames = 0;
+		int frames = 0; 
 		double timer = System.currentTimeMillis();
 
 		this.requestFocus();
