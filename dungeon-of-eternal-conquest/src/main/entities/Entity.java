@@ -158,6 +158,10 @@ public abstract class Entity {
 		}
 	}
 	
+	public boolean isDead() {
+		return life <= 0;
+	}
+	
 	public void updateDamage(double minDamage, double maxDamage) {
 		this.minDamage = minDamage;
 		this.maxDamage = maxDamage;

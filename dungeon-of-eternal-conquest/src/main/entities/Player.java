@@ -22,8 +22,6 @@ public class Player extends Entity {
 
 	@Override
 	public void tick(Dungeon dungeon) {
-		System.out.println("Life: " + life);
-		
 		moved = false;
 
 		if (up && dungeon.isFree(this, dungeon.UP)) {

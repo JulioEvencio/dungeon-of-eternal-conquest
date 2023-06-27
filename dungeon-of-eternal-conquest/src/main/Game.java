@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 
 import main.dungeon.Dungeon;
 import main.entities.Player;
+import main.menu.Menu;
 import main.util.Spritesheet;
 
 public class Game extends Canvas implements Runnable, KeyListener {
@@ -31,6 +32,13 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static final int WIDTH = 240;
 	public static final int HEIGHT = 160;
 	public static final int SCALE = 3;
+	
+	public static final int GAME_MENU = 1;
+	public static final int GAME_RUN = 2;
+	public static final int GAME_EXIT = 5;
+	
+	private int gameState;
+	private boolean isPaused;
 
 	private boolean showFPS;
 	private int fps;
@@ -41,10 +49,14 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	private final Spritesheet spritesheet;
 
+	private final Menu menu;
 	private Player player;
 	private Dungeon dungeon;
 
 	public Game() throws IOException {
+		this.gameState = GAME_MENU;
+		
+		this.isPaused = false;
 		this.showFPS = false;
 		this.isFullscreen = false;
 		
@@ -66,6 +78,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 		spritesheet = new Spritesheet("/dungeon/tiles.png");
 
+		menu = new Menu();
 		player = new Player();
 		dungeon = new Dungeon("/levels/level-01.png", spritesheet, player);
 	}
@@ -98,9 +111,37 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 	}
+	
+	public void restart() {
+		try {
+			player = new Player();
+			dungeon = new Dungeon("/levels/level-01.png", spritesheet, player);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
+	}
 
 	public void tick() {
-		dungeon.tick();
+		if (gameState == GAME_RUN) {
+			if (!isPaused) {
+				dungeon.tick();
+				
+				if (player.isDead()) {
+					gameState = GAME_MENU;
+				}
+			}
+		} else if (gameState == GAME_MENU) {
+			menu.tick();
+			
+			gameState = menu.getOption();
+			
+			if (gameState == GAME_RUN) {
+				this.restart();
+			} else if (gameState == GAME_EXIT) {
+				System.exit(0);
+			}
+		}
 	}
 
 	public void render() {
@@ -124,11 +165,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		
 		if (isFullscreen) {
 			g.drawImage(renderer, 0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height, null);
+			
+			if (gameState == GAME_MENU) {
+				menu.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+			}
 		} else {
 			g.drawImage(renderer, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+			
+			if (gameState == GAME_MENU) {
+				menu.render(g);
+			}
 		}
-
-		// Code
 
 		if (showFPS) {
 			g.setColor(Color.WHITE);
@@ -142,12 +189,32 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		dungeon.keyPressed(e);
+		if (gameState == GAME_RUN) {
+			dungeon.keyPressed(e);
+		} else if (gameState == GAME_MENU) {
+			if (e.getKeyCode() == KeyEvent.VK_W) {
+				menu.menuUp();
+			}
+			
+			if (e.getKeyCode() == KeyEvent.VK_S) {
+				menu.menuDown();
+			}
+			
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				menu.menuSpace();
+			}
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		dungeon.keyReleased(e);
+		if (gameState == GAME_RUN) {
+			dungeon.keyReleased(e);
+			
+			if (e.getKeyCode() == KeyEvent.VK_P) {
+				isPaused = !isPaused;
+			}
+		}
 		
 		if (e.getKeyCode() == KeyEvent.VK_F2) {
 			this.updateFullscreen();
