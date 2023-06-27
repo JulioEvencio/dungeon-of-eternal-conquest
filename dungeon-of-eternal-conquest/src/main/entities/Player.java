@@ -1,6 +1,5 @@
 package main.entities;
 
-import java.awt.Graphics;
 import java.io.IOException;
 
 import main.Game;
@@ -64,23 +63,6 @@ public class Player extends Entity {
 
 		Camera.x = Camera.clamp((int) (x - (Game.WIDTH / 2)), 0, dungeon.WIDTH * 16 - Game.WIDTH);
 		Camera.y = Camera.clamp((int) (y - (Game.HEIGHT / 2)), 0, dungeon.HEIGHT * 16 - Game.HEIGHT);
-	}
-
-	@Override
-	public void render(Graphics graphics) {
-		if (dir == dirRight) {
-			if (moved) {
-				graphics.drawImage(movingRightEntity[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
-			} else {
-				graphics.drawImage(idleRightEntity[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
-			}
-		} else {
-			if (moved) {
-				graphics.drawImage(movingLeftEntity[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
-			} else {
-				graphics.drawImage(idleLeftEntity[index], (int) (x - Camera.x), (int) (y - Camera.y), width, height, null);
-			}
-		}
 	}
 
 }
