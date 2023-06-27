@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 
 import main.dungeon.Dungeon;
 import main.entities.Player;
+import main.menu.GameOver;
 import main.menu.Menu;
 import main.util.Spritesheet;
 
@@ -35,7 +36,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	
 	public static final int GAME_MENU = 1;
 	public static final int GAME_RUN = 2;
-	public static final int GAME_EXIT = 5;
+	public static final int GAME_OVER = 3;
+	public static final int GAME_EXIT = 4;
 	
 	private int gameState;
 	private boolean isPaused;
@@ -50,6 +52,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private final Spritesheet spritesheet;
 
 	private final Menu menu;
+	private final GameOver gameOver;
+	
 	private Player player;
 	private Dungeon dungeon;
 
@@ -79,6 +83,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		spritesheet = new Spritesheet("/dungeon/tiles.png");
 
 		menu = new Menu();
+		gameOver = new GameOver();
+		
 		player = new Player();
 		dungeon = new Dungeon("/levels/level-01.png", spritesheet, player);
 	}
@@ -128,7 +134,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 				dungeon.tick();
 				
 				if (player.isDead()) {
-					gameState = GAME_MENU;
+					gameState = GAME_OVER;
 				}
 			}
 		} else if (gameState == GAME_MENU) {
@@ -166,14 +172,24 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		if (isFullscreen) {
 			g.drawImage(renderer, 0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height, null);
 			
-			if (gameState == GAME_MENU) {
-				menu.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+			switch (gameState) {
+				case GAME_MENU:
+					menu.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+					break;
+				case GAME_OVER:
+					gameOver.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+					break;
 			}
 		} else {
 			g.drawImage(renderer, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
 			
-			if (gameState == GAME_MENU) {
-				menu.render(g);
+			switch (gameState) {
+				case GAME_MENU:
+					menu.render(g);
+					break;
+				case GAME_OVER:
+					gameOver.render(g);
+					break;
 			}
 		}
 
@@ -202,6 +218,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				menu.menuSpace();
+			}
+		} else if (gameState == GAME_OVER) {
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				gameState = GAME_MENU;
+				this.restart();
 			}
 		}
 	}
