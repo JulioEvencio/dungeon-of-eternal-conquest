@@ -98,7 +98,9 @@ public class Menu {
 			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 204);
 		}
 		
-		graphics.drawString("Use W and S keys to move and space to select", Game.WIDTH * Game.SCALE / 2 - 305, 304);
+		graphics.drawString("Use W and S keys to move and SPACE to select", Game.WIDTH * Game.SCALE / 2 - 305, 304);
+		graphics.drawString("Press f2 to enable fullscreen", Game.WIDTH * Game.SCALE / 2 - 305, 354);
+		graphics.drawString("Press f3 to enable/disable FPS", Game.WIDTH * Game.SCALE / 2 - 305, 404);
 	}
 	
 	public void renderFullscreen(Graphics graphics, int width, int height) {
@@ -120,7 +122,9 @@ public class Menu {
 			graphics.drawString("-> ", width / 2 - 90, height / 2 - 50);
 		}
 		
-		graphics.drawString("Use W and S keys to move and space to select", width / 2 - 300, height / 2 + 50);
+		graphics.drawString("Use W and S keys to move and SPACE to select", width / 2 - 300, height / 2 + 50);
+		graphics.drawString("Press f2 to disable fullscreen", width / 2 - 300, height / 2 + 100);
+		graphics.drawString("Press f3 to enable/disable FPS", width / 2 - 300, height / 2 + 150);
 	}
 
 }
