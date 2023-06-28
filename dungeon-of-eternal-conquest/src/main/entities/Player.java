@@ -9,7 +9,7 @@ import main.dungeon.Dungeon;
 public class Player extends Entity {
 
 	public Player() throws IOException {
-		super(0, 0, 16, 16, 1, 1, 5, 2, 3, 5, 6, "/entities/player.png");
+		super(0, 0, 16, 16, 1, 1, 5, 2, 3, 5, 6, "/sprites/entities/player.png");
 	}
 
 	@Override

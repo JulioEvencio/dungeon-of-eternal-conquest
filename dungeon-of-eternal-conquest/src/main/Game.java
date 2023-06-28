@@ -80,7 +80,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 		renderer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
-		spritesheet = new Spritesheet("/dungeon/tiles.png");
+		spritesheet = new Spritesheet("/sprites/dungeon/tiles.png");
 
 		menu = new Menu();
 		gameOver = new GameOver();
