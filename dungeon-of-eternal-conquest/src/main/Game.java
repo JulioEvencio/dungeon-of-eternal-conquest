@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 
 import main.dungeon.Dungeon;
 import main.entities.Player;
+import main.menu.Credits;
 import main.menu.GameOver;
 import main.menu.Menu;
 import main.util.Spritesheet;
@@ -38,6 +39,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static final int GAME_RUN = 2;
 	public static final int GAME_OVER = 3;
 	public static final int GAME_EXIT = 4;
+	public static final int GAME_CREDITS = 5;
 	
 	private int gameState;
 	private boolean isPaused;
@@ -53,6 +55,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	private final Menu menu;
 	private final GameOver gameOver;
+	private final Credits credits;
 	
 	private Player player;
 	private Dungeon dungeon;
@@ -84,6 +87,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 		menu = new Menu();
 		gameOver = new GameOver();
+		credits = new Credits();
 		
 		player = new Player();
 		dungeon = new Dungeon("/levels/level-01.png", spritesheet, player);
@@ -179,6 +183,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 				case GAME_OVER:
 					gameOver.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
 					break;
+				case GAME_CREDITS:
+					credits.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+					break;
 			}
 		} else {
 			g.drawImage(renderer, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
@@ -189,6 +196,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 					break;
 				case GAME_OVER:
 					gameOver.render(g);
+					break;
+				case GAME_CREDITS:
+					credits.render(g);
 					break;
 			}
 		}
@@ -219,7 +229,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				menu.menuSpace();
 			}
-		} else if (gameState == GAME_OVER) {
+		} else if (gameState == GAME_OVER || gameState == GAME_CREDITS) {
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				gameState = GAME_MENU;
 				this.restart();
@@ -290,6 +300,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		try {
 			new Game().start();
 		} catch (Exception e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}

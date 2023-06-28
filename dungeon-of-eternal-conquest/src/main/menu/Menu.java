@@ -18,7 +18,7 @@ public class Menu {
 	private boolean space;
 
 	public Menu() {
-		options = new String[2];
+		options = new String[3];
 		currentOption = 0;
 		selectedOption = Game.GAME_MENU;
 		maxOption = options.length - 1;
@@ -28,7 +28,8 @@ public class Menu {
 		space = false;
 
 		options[0] = "New Game";
-		options[1] = "Exit";
+		options[1] = "Credits";
+		options[2] = "Exit";
 	}
 	
 	public void menuUp() {
@@ -74,6 +75,8 @@ public class Menu {
 			if (currentOption == 0) {
 				selectedOption = Game.GAME_RUN;
 			} else if (currentOption == 1) {
+				selectedOption = Game.GAME_CREDITS;
+			} else if (currentOption == 2) {
 				selectedOption = Game.GAME_EXIT;
 			}
 		}
@@ -89,18 +92,24 @@ public class Menu {
 
 		graphics.setColor(Color.WHITE);
 		graphics.setFont(new Font("arial", Font.BOLD, 24));
+		
 		graphics.drawString(options[0], Game.WIDTH * Game.SCALE / 2 - 50, 160);
 		graphics.drawString(options[1], Game.WIDTH * Game.SCALE / 2 - 50, 204);
+		graphics.drawString(options[2], Game.WIDTH * Game.SCALE / 2 - 50, 248);
 
 		if (currentOption == 0) {
 			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 160);
 		} else if (currentOption == 1) {
 			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 204);
+		} else if (currentOption == 2) {
+			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 248);
 		}
 		
-		graphics.drawString("Use W and S keys to move and SPACE to select", Game.WIDTH * Game.SCALE / 2 - 305, 304);
-		graphics.drawString("Press f2 to enable fullscreen", Game.WIDTH * Game.SCALE / 2 - 305, 354);
-		graphics.drawString("Press f3 to enable/disable FPS", Game.WIDTH * Game.SCALE / 2 - 305, 404);
+		graphics.setColor(Color.GREEN);
+		
+		graphics.drawString("Use W and S keys to move and SPACE to select", Game.WIDTH * Game.SCALE / 2 - 305, 314);
+		graphics.drawString("Press F2 to enable fullscreen", Game.WIDTH * Game.SCALE / 2 - 305, 364);
+		graphics.drawString("Press F3 to enable/disable FPS", Game.WIDTH * Game.SCALE / 2 - 305, 414);
 	}
 	
 	public void renderFullscreen(Graphics graphics, int width, int height) {
@@ -113,18 +122,24 @@ public class Menu {
 
 		graphics.setColor(Color.WHITE);
 		graphics.setFont(new Font("arial", Font.BOLD, 24));
+		
 		graphics.drawString(options[0], width / 2 - 50, height / 2 - 100);
 		graphics.drawString(options[1], width / 2 - 50, height / 2 - 50);
+		graphics.drawString(options[2], width / 2 - 50, height / 2 - 0);
 
 		if (currentOption == 0) {
 			graphics.drawString("-> ", width / 2 - 90, height / 2 - 100);
 		} else if (currentOption == 1) {
 			graphics.drawString("-> ", width / 2 - 90, height / 2 - 50);
+		} else if (currentOption == 2) {
+			graphics.drawString("-> ", width / 2 - 90, height / 2 - 0);
 		}
 		
+		graphics.setColor(Color.GREEN);
+		
 		graphics.drawString("Use W and S keys to move and SPACE to select", width / 2 - 300, height / 2 + 50);
-		graphics.drawString("Press f2 to disable fullscreen", width / 2 - 300, height / 2 + 100);
-		graphics.drawString("Press f3 to enable/disable FPS", width / 2 - 300, height / 2 + 150);
+		graphics.drawString("Press F2 to disable fullscreen", width / 2 - 300, height / 2 + 100);
+		graphics.drawString("Press F3 to enable/disable FPS", width / 2 - 300, height / 2 + 150);
 	}
 
 }

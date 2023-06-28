@@ -16,9 +16,10 @@ public class GameOver {
 		graphics.setFont(new Font("arial", Font.BOLD, 36));
 		graphics.drawString(">Game Over<", Game.WIDTH * Game.SCALE / 2 - 130, Game.HEIGHT * Game.SCALE / 2 - 160);
 
-		graphics.setColor(Color.WHITE);
+		graphics.setColor(Color.GREEN);
 		graphics.setFont(new Font("arial", Font.BOLD, 24));
-		graphics.drawString("Press space to continue", Game.WIDTH * Game.SCALE / 2 - 150, 160);
+		
+		graphics.drawString("Press SPACE to continue", Game.WIDTH * Game.SCALE / 2 - 150, 160);
 	}
 	
 	public void renderFullscreen(Graphics graphics, int width, int height) {
@@ -29,9 +30,9 @@ public class GameOver {
 		graphics.setFont(new Font("arial", Font.BOLD, 36));
 		graphics.drawString(">Game Over<", width / 2 - 130, height / 2 - 160);
 
-		graphics.setColor(Color.WHITE);
+		graphics.setColor(Color.GREEN);
 		graphics.setFont(new Font("arial", Font.BOLD, 24));
-		graphics.drawString("Press space to continue", width / 2 - 150, height / 2 - 100);
+		graphics.drawString("Press SPACE to continue", width / 2 - 150, height / 2 - 100);
 	}
 	
 }
