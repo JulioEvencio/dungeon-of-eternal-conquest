@@ -89,9 +89,17 @@ public class Dungeon {
 	}
 
 	public void tick() {
+		List<Slime> slimeRemoved = new ArrayList<>();
+		
 		for (Slime slime : slimes) {
 			slime.tick(this);
+			
+			if (slime.isDead()) {
+				slimeRemoved.add(slime);
+			}
 		}
+		
+		slimes.removeAll(slimeRemoved);
 		
 		player.tick(this);
 	}
@@ -171,6 +179,12 @@ public class Dungeon {
 
 		if (e.getKeyCode() == KeyEvent.VK_A) {
 			player.stopLeft();
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			if (!player.isAttacking()) {
+				player.initAttack();
+			}
 		}
 	}
 	

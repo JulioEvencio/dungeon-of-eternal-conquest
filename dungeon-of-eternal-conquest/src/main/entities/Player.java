@@ -2,17 +2,22 @@ package main.entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 
 import main.Game;
 import main.dungeon.Camera;
 import main.dungeon.Dungeon;
 import main.util.Spritesheet;
+import main.weapons.Punch;
 
 public class Player extends Entity {
 
 	private final BufferedImage spriteLife;
+	
+	private final Punch punch;
 	
 	public Player() throws IOException {
 		super(0, 0, 16, 16, 1, 1, 5, 2, 4, 5, 6, "/sprites/entities/player.png");
@@ -20,8 +25,37 @@ public class Player extends Entity {
 		Spritesheet spritesheet = new Spritesheet("/sprites/entities/player.png");
 
 		spriteLife = spritesheet.getSprite(0, 64, 80, 16);
+		
+		punch = new Punch(0, 0, 16, 16, minDamage, maxDamage, 8, 3, "/sprites/entities/player.png");
+	}
+	
+	public boolean isAttacking() {
+		return punch.isAttacking();
+	}
+	
+	public void initAttack() {
+		punch.initAttack();
+	}
+	
+	@Override
+	public double dealDamage() {
+		return minDamage + (maxDamage - minDamage) * new Random().nextDouble() + punch.dealDamage();
+	}
+	
+	public Rectangle getMaskAttack() {
+		return punch.getRectangle();
 	}
 
+	@Override
+	public void setPosition(double x, double y) {
+		this.x = x;
+		this.y = y;
+		
+		this.updateMask();
+		
+		punch.setPosition(this.x + 16, this.y);
+	}
+	
 	@Override
 	protected void updateMask() {
 		this.maskX = x + 4;
@@ -73,6 +107,16 @@ public class Player extends Entity {
 
 		Camera.x = Camera.clamp((int) (x - (Game.WIDTH / 2)), 0, dungeon.WIDTH * 16 - Game.WIDTH);
 		Camera.y = Camera.clamp((int) (y - (Game.HEIGHT / 2)), 0, dungeon.HEIGHT * 16 - Game.HEIGHT);
+		
+		if (dir == dirRight) {
+			punch.setDirRight();
+			punch.setPosition(x + 16, y);
+		} else {
+			punch.setDirLeft();
+			punch.setPosition(x - 16, y);
+		}
+		
+		punch.tick();
 	}
 	
 	private void showLife(Graphics graphics) {
@@ -114,6 +158,8 @@ public class Player extends Entity {
 		}
 		
 		this.showLife(graphics);
+		
+		punch.render(graphics);
 	}
 
 }

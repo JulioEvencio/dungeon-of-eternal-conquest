@@ -22,6 +22,10 @@ public class Slime extends Entity {
 	public void tick(Dungeon dungeon) {
 		moved = false;
 		
+		if (dungeon.player.isAttacking() && dungeon.player.getMaskAttack().intersects(this.getRectangle())) {
+			this.takeDamage(dungeon.player.dealDamage());
+		}
+		
 		if (dungeon.player.getRectangle().intersects(this.getRectangle())) {
 			dungeon.player.takeDamage(this.dealDamage());
 		} else {
