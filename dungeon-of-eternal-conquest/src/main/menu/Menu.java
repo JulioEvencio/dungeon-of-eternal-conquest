@@ -18,7 +18,7 @@ public class Menu {
 	private boolean enter;
 
 	public Menu() {
-		options = new String[3];
+		options = new String[4];
 		currentOption = 0;
 		selectedOption = Game.GAME_MENU;
 		maxOption = options.length - 1;
@@ -28,8 +28,9 @@ public class Menu {
 		enter = false;
 
 		options[0] = "New Game";
-		options[1] = "Credits";
-		options[2] = "Exit";
+		options[1] = "Tutorial";
+		options[2] = "Credits";
+		options[3] = "Exit";
 	}
 	
 	public void menuUp() {
@@ -75,8 +76,10 @@ public class Menu {
 			if (currentOption == 0) {
 				selectedOption = Game.GAME_RUN;
 			} else if (currentOption == 1) {
-				selectedOption = Game.GAME_CREDITS;
+				selectedOption = Game.GAME_TUTORIAL;
 			} else if (currentOption == 2) {
+				selectedOption = Game.GAME_CREDITS;
+			} else if (currentOption == 3) {
 				selectedOption = Game.GAME_EXIT;
 			}
 		}
@@ -93,23 +96,24 @@ public class Menu {
 		graphics.setColor(Color.WHITE);
 		graphics.setFont(new Font("arial", Font.BOLD, 24));
 		
-		graphics.drawString(options[0], Game.WIDTH * Game.SCALE / 2 - 50, 160);
-		graphics.drawString(options[1], Game.WIDTH * Game.SCALE / 2 - 50, 204);
-		graphics.drawString(options[2], Game.WIDTH * Game.SCALE / 2 - 50, 248);
+		graphics.drawString(options[0], Game.WIDTH * Game.SCALE / 2 - 50, 150);
+		graphics.drawString(options[1], Game.WIDTH * Game.SCALE / 2 - 50, 200);
+		graphics.drawString(options[2], Game.WIDTH * Game.SCALE / 2 - 50, 250);
+		graphics.drawString(options[3], Game.WIDTH * Game.SCALE / 2 - 50, 300);
 
 		if (currentOption == 0) {
-			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 160);
+			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 150);
 		} else if (currentOption == 1) {
-			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 204);
+			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 200);
 		} else if (currentOption == 2) {
-			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 248);
+			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 250);
+		} else if (currentOption == 3) {
+			graphics.drawString("-> ", Game.WIDTH * Game.SCALE / 2 - 90, 300);
 		}
 		
 		graphics.setColor(Color.GREEN);
 		
-		graphics.drawString("Use W and S keys to move and ENTER to select", Game.WIDTH * Game.SCALE / 2 - 305, 314);
-		graphics.drawString("Press F2 to enable fullscreen", Game.WIDTH * Game.SCALE / 2 - 305, 364);
-		graphics.drawString("Press F3 to enable/disable FPS", Game.WIDTH * Game.SCALE / 2 - 305, 414);
+		graphics.drawString("Use W and S keys to move and ENTER to select", Game.WIDTH * Game.SCALE / 2 - 305, 414);
 	}
 	
 	public void renderFullscreen(Graphics graphics, int width, int height) {
@@ -126,6 +130,7 @@ public class Menu {
 		graphics.drawString(options[0], width / 2 - 50, height / 2 - 100);
 		graphics.drawString(options[1], width / 2 - 50, height / 2 - 50);
 		graphics.drawString(options[2], width / 2 - 50, height / 2 - 0);
+		graphics.drawString(options[3], width / 2 - 50, height / 2 + 50);
 
 		if (currentOption == 0) {
 			graphics.drawString("-> ", width / 2 - 90, height / 2 - 100);
@@ -133,13 +138,13 @@ public class Menu {
 			graphics.drawString("-> ", width / 2 - 90, height / 2 - 50);
 		} else if (currentOption == 2) {
 			graphics.drawString("-> ", width / 2 - 90, height / 2 - 0);
+		} else if (currentOption == 3) {
+			graphics.drawString("-> ", width / 2 - 90, height / 2 + 50);
 		}
 		
 		graphics.setColor(Color.GREEN);
 		
-		graphics.drawString("Use W and S keys to move and ENTER to select", width / 2 - 300, height / 2 + 50);
-		graphics.drawString("Press F2 to disable fullscreen", width / 2 - 300, height / 2 + 100);
-		graphics.drawString("Press F3 to enable/disable FPS", width / 2 - 300, height / 2 + 150);
+		graphics.drawString("Use W and S keys to move and ENTER to select", width / 2 - 300, height / 2 + 150);
 	}
 
 }

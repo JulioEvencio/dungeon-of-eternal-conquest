@@ -21,6 +21,7 @@ import main.menu.Credits;
 import main.menu.GameOver;
 import main.menu.Menu;
 import main.menu.Pause;
+import main.menu.Tutorial;
 import main.util.Spritesheet;
 
 public class Game extends Canvas implements Runnable, KeyListener {
@@ -42,6 +43,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static final int GAME_OVER = 4;
 	public static final int GAME_EXIT = 5;
 	public static final int GAME_CREDITS = 6;
+	public static final int GAME_TUTORIAL = 7;
 	
 	private int gameState;
 
@@ -58,6 +60,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private final Menu menu;
 	private final GameOver gameOver;
 	private final Credits credits;
+	private final Tutorial tutorial;
 	
 	private Player player;
 	private Dungeon dungeon;
@@ -90,6 +93,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		menu = new Menu();
 		gameOver = new GameOver();
 		credits = new Credits();
+		tutorial = new Tutorial();
 		
 		player = new Player();
 		dungeon = new Dungeon("/levels/level-01.png", spritesheet, player);
@@ -198,6 +202,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 				case GAME_OVER:
 					gameOver.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
 					break;
+				case GAME_TUTORIAL:
+					tutorial.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+					break;
 				case GAME_CREDITS:
 					credits.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
 					break;
@@ -214,6 +221,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 					break;
 				case GAME_OVER:
 					gameOver.render(g);
+					break;
+				case GAME_TUTORIAL:
+					tutorial.render(g);
 					break;
 				case GAME_CREDITS:
 					credits.render(g);
@@ -274,7 +284,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				menu.menuEnter();
 			}
-		} else if (gameState == GAME_CREDITS) {
+		} else if (gameState == GAME_CREDITS || gameState == GAME_TUTORIAL) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				gameState = GAME_MENU;
 			}

@@ -14,16 +14,16 @@ public class Tutorial {
 
 		graphics.setColor(Color.RED);
 		graphics.setFont(new Font("arial", Font.BOLD, 36));
-		graphics.drawString(">Credits<", Game.WIDTH * Game.SCALE / 2 - 130, Game.HEIGHT * Game.SCALE / 2 - 160);
+		graphics.drawString(">Tutorial<", Game.WIDTH * Game.SCALE / 2 - 130, Game.HEIGHT * Game.SCALE / 2 - 160);
 
 		graphics.setColor(Color.WHITE);
 		graphics.setFont(new Font("arial", Font.BOLD, 16));
 		
-		graphics.drawString("> Programmer: Júlio Igreja", Game.WIDTH * Game.SCALE / 2 - 330, 160);
-		graphics.drawString("> Access: https://github.com/JulioEvencio", Game.WIDTH * Game.SCALE / 2 - 330, 180);
-		
-		graphics.drawString("> Sprites: o_lobster", Game.WIDTH * Game.SCALE / 2 - 330, 260);
-		graphics.drawString("> Access: https://o-lobster.itch.io/", Game.WIDTH * Game.SCALE / 2 - 330, 280);
+		graphics.drawString("> W, A, S, D -> use to move", Game.WIDTH * Game.SCALE / 2 - 330, 160);
+		graphics.drawString("> SPACE -> use to attack", Game.WIDTH * Game.SCALE / 2 - 330, 180);
+		graphics.drawString("> ESC or P -> use to pause the game", Game.WIDTH * Game.SCALE / 2 - 330, 200);
+		graphics.drawString("> F2 -> to enable fullscreen", Game.WIDTH * Game.SCALE / 2 - 330, 220);
+		graphics.drawString("> F3 -> to enable/disable FPS", Game.WIDTH * Game.SCALE / 2 - 330, 240);
 		
 		graphics.setColor(Color.GREEN);
 		graphics.setFont(new Font("arial", Font.BOLD, 24));
@@ -37,16 +37,16 @@ public class Tutorial {
 
 		graphics.setColor(Color.RED);
 		graphics.setFont(new Font("arial", Font.BOLD, 36));
-		graphics.drawString(">Credits<", width / 2 - 130, height / 2 - 160);
+		graphics.drawString(">Tutorial<", width / 2 - 130, height / 2 - 160);
 
 		graphics.setColor(Color.WHITE);
 		graphics.setFont(new Font("arial", Font.BOLD, 16));
 		
-		graphics.drawString("> Programmer: Júlio Igreja", width / 2 - 300, height / 2 - 60);
-		graphics.drawString("> Access: https://github.com/JulioEvencio", width / 2 - 300, height / 2 - 40);
-		
-		graphics.drawString("> Sprites: o_lobster", width / 2 - 300, height / 2 + 60);
-		graphics.drawString("> Access: https://o-lobster.itch.io/", width / 2 - 300, height / 2 + 80);
+		graphics.drawString("> W, A, S, D -> use to move", width / 2 - 300, height / 2 - 60);
+		graphics.drawString("> SPACE -> use to attack", width / 2 - 300, height / 2 - 40);
+		graphics.drawString("> ESC or P -> use to pause the game", width / 2 - 300, height / 2 - 20);
+		graphics.drawString("> F2 -> to disable fullscreen", width / 2 - 300, height / 2 - 00);
+		graphics.drawString("> F3 -> to enable/disable FPS", width / 2 - 300, height / 2 + 20);
 		
 		graphics.setColor(Color.GREEN);
 		graphics.setFont(new Font("arial", Font.BOLD, 24));
