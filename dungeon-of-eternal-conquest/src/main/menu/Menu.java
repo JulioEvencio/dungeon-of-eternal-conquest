@@ -112,7 +112,6 @@ public class Menu {
 		}
 		
 		graphics.setColor(Color.GREEN);
-		
 		graphics.drawString("Use W and S keys to move and ENTER to select", Game.WIDTH * Game.SCALE / 2 - 305, 414);
 	}
 	
@@ -143,7 +142,6 @@ public class Menu {
 		}
 		
 		graphics.setColor(Color.GREEN);
-		
 		graphics.drawString("Use W and S keys to move and ENTER to select", width / 2 - 300, height / 2 + 150);
 	}
 
