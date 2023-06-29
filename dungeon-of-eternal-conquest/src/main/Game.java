@@ -20,6 +20,7 @@ import main.entities.Player;
 import main.menu.Credits;
 import main.menu.GameOver;
 import main.menu.Menu;
+import main.menu.Pause;
 import main.util.Spritesheet;
 
 public class Game extends Canvas implements Runnable, KeyListener {
@@ -37,12 +38,12 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	
 	public static final int GAME_MENU = 1;
 	public static final int GAME_RUN = 2;
-	public static final int GAME_OVER = 3;
-	public static final int GAME_EXIT = 4;
-	public static final int GAME_CREDITS = 5;
+	public static final int GAME_PAUSED = 3;
+	public static final int GAME_OVER = 4;
+	public static final int GAME_EXIT = 5;
+	public static final int GAME_CREDITS = 6;
 	
 	private int gameState;
-	private boolean isPaused;
 
 	private boolean showFPS;
 	private int fps;
@@ -53,6 +54,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	private final Spritesheet spritesheet;
 
+	private final Pause pause;
 	private final Menu menu;
 	private final GameOver gameOver;
 	private final Credits credits;
@@ -63,7 +65,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public Game() throws IOException {
 		this.gameState = GAME_MENU;
 		
-		this.isPaused = false;
 		this.showFPS = false;
 		this.isFullscreen = false;
 		
@@ -85,6 +86,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 		spritesheet = new Spritesheet("/sprites/dungeon/tiles.png");
 
+		pause = new Pause();
 		menu = new Menu();
 		gameOver = new GameOver();
 		credits = new Credits();
@@ -132,14 +134,24 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		}
 	}
 
+	public void exitGame() {
+		System.exit(0);
+	}
+	
 	public void tick() {
 		if (gameState == GAME_RUN) {
-			if (!isPaused) {
-				dungeon.tick();
-				
-				if (player.isDead()) {
-					gameState = GAME_OVER;
-				}
+			dungeon.tick();
+			
+			if (player.isDead()) {
+				gameState = GAME_OVER;
+			}
+		} else if (gameState == GAME_PAUSED) {
+			pause.tick();
+			
+			gameState = pause.getOption();
+			
+			if (gameState == GAME_EXIT) {
+				this.exitGame();
 			}
 		} else if (gameState == GAME_MENU) {
 			menu.tick();
@@ -149,7 +161,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			if (gameState == GAME_RUN) {
 				this.restart();
 			} else if (gameState == GAME_EXIT) {
-				System.exit(0);
+				this.exitGame();
 			}
 		}
 	}
@@ -177,6 +189,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			g.drawImage(renderer, 0, 0, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height, null);
 			
 			switch (gameState) {
+				case GAME_PAUSED:
+					pause.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+					break;
 				case GAME_MENU:
 					menu.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
 					break;
@@ -191,6 +206,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			g.drawImage(renderer, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
 			
 			switch (gameState) {
+				case GAME_PAUSED:
+					pause.render(g);
+					break;
 				case GAME_MENU:
 					menu.render(g);
 					break;
@@ -217,6 +235,33 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public void keyPressed(KeyEvent e) {
 		if (gameState == GAME_RUN) {
 			dungeon.keyPressed(e);
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if (gameState == GAME_RUN) {
+			dungeon.keyReleased(e);
+			
+			if (e.getKeyCode() == KeyEvent.VK_P || e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+				gameState = GAME_PAUSED;
+			}
+		} else if (gameState == GAME_PAUSED) { 
+			if (e.getKeyCode() == KeyEvent.VK_W) {
+				pause.menuUp();
+			}
+			
+			if (e.getKeyCode() == KeyEvent.VK_S) {
+				pause.menuDown();
+			}
+			
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				pause.menuEnter();
+			}
+			
+			if (e.getKeyCode() == KeyEvent.VK_P || e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+				gameState = GAME_RUN;
+			}
 		} else if (gameState == GAME_MENU) {
 			if (e.getKeyCode() == KeyEvent.VK_W) {
 				menu.menuUp();
@@ -226,24 +271,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
 				menu.menuDown();
 			}
 			
-			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-				menu.menuSpace();
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				menu.menuEnter();
 			}
-		} else if (gameState == GAME_OVER || gameState == GAME_CREDITS) {
-			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+		} else if (gameState == GAME_CREDITS) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				gameState = GAME_MENU;
+			}
+		} else if (gameState == GAME_OVER) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				gameState = GAME_MENU;
 				this.restart();
-			}
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		if (gameState == GAME_RUN) {
-			dungeon.keyReleased(e);
-			
-			if (e.getKeyCode() == KeyEvent.VK_P) {
-				isPaused = !isPaused;
 			}
 		}
 		

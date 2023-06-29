@@ -6,7 +6,7 @@ import java.awt.Graphics;
 
 import main.Game;
 
-public class Menu {
+public class Pause {
 
 	private final String[] options;
 	private int currentOption;
@@ -17,18 +17,18 @@ public class Menu {
 	private boolean down;
 	private boolean enter;
 
-	public Menu() {
+	public Pause() {
 		options = new String[3];
 		currentOption = 0;
-		selectedOption = Game.GAME_MENU;
+		selectedOption = Game.GAME_PAUSED;
 		maxOption = options.length - 1;
 
 		up = false;
 		down = false;
 		enter = false;
 
-		options[0] = "New Game";
-		options[1] = "Credits";
+		options[0] = "Resume";
+		options[1] = "Menu";
 		options[2] = "Exit";
 	}
 	
@@ -49,7 +49,7 @@ public class Menu {
 	}
 	
 	public void tick() {
-		selectedOption = Game.GAME_MENU;
+		selectedOption = Game.GAME_PAUSED;
 		
 		if (up) {
 			up = false;
@@ -75,7 +75,7 @@ public class Menu {
 			if (currentOption == 0) {
 				selectedOption = Game.GAME_RUN;
 			} else if (currentOption == 1) {
-				selectedOption = Game.GAME_CREDITS;
+				selectedOption = Game.GAME_MENU;
 			} else if (currentOption == 2) {
 				selectedOption = Game.GAME_EXIT;
 			}
@@ -108,8 +108,6 @@ public class Menu {
 		graphics.setColor(Color.GREEN);
 		
 		graphics.drawString("Use W and S keys to move and ENTER to select", Game.WIDTH * Game.SCALE / 2 - 305, 314);
-		graphics.drawString("Press F2 to enable fullscreen", Game.WIDTH * Game.SCALE / 2 - 305, 364);
-		graphics.drawString("Press F3 to enable/disable FPS", Game.WIDTH * Game.SCALE / 2 - 305, 414);
 	}
 	
 	public void renderFullscreen(Graphics graphics, int width, int height) {
@@ -138,8 +136,6 @@ public class Menu {
 		graphics.setColor(Color.GREEN);
 		
 		graphics.drawString("Use W and S keys to move and ENTER to select", width / 2 - 300, height / 2 + 50);
-		graphics.drawString("Press F2 to disable fullscreen", width / 2 - 300, height / 2 + 100);
-		graphics.drawString("Press F3 to enable/disable FPS", width / 2 - 300, height / 2 + 150);
 	}
 
 }

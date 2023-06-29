@@ -19,7 +19,7 @@ public class GameOver {
 		graphics.setColor(Color.GREEN);
 		graphics.setFont(new Font("arial", Font.BOLD, 24));
 		
-		graphics.drawString("Press SPACE to continue", Game.WIDTH * Game.SCALE / 2 - 150, 160);
+		graphics.drawString("Press ENTER to continue", Game.WIDTH * Game.SCALE / 2 - 150, 160);
 	}
 	
 	public void renderFullscreen(Graphics graphics, int width, int height) {
@@ -32,7 +32,7 @@ public class GameOver {
 
 		graphics.setColor(Color.GREEN);
 		graphics.setFont(new Font("arial", Font.BOLD, 24));
-		graphics.drawString("Press SPACE to continue", width / 2 - 150, height / 2 - 100);
+		graphics.drawString("Press ENTER to continue", width / 2 - 150, height / 2 - 100);
 	}
 	
 }

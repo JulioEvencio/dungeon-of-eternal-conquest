@@ -6,7 +6,7 @@ import java.awt.Graphics;
 
 import main.Game;
 
-public class Credits {
+public class Tutorial {
 	
 	public void render(Graphics graphics) {
 		graphics.setColor(new Color(0, 0, 0, 200));
