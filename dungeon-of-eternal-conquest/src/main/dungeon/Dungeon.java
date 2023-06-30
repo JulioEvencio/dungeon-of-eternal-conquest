@@ -27,29 +27,39 @@ public class Dungeon {
 	public final int DOWN;
 	public final int RIGHT;
 	public final int LEFT;
+	
+	private final int level;
 
-	public Player player;
+	public final Player player;
+	
+	private final Wall wallSpecial;
+	private final Stairway stairway;
 	
 	private final List<Wall> walls;
 	private final List<Floor> floors;
-	private final List<Stairway> stairways;
 	
 	private final List<Slime> slimes;
 
-	public Dungeon(String path, Spritesheet spritesheet, Player player) throws IOException {
+	public Dungeon(int level, Spritesheet spritesheet, Player player) throws IOException {
 		this.UP = 1;
 		this.DOWN = 2;
 		this.RIGHT = 3;
 		this.LEFT = 4;
 		
+		this.level = level;
+		
 		this.player = player;
+		
+		this.wallSpecial = new Wall(0, 0, 16, 16, spritesheet);
+		this.stairway = new Stairway(0, 0, 16, 16, spritesheet);
 
 		this.walls = new ArrayList<>();
 		this.floors = new ArrayList<>();
-		this.stairways = new ArrayList<>();
 		
 		this.slimes = new ArrayList<>();
 
+		String path = String.format("/levels/level-%02d.png", this.level);
+		
 		BufferedImage map = ImageIO.read(this.getClass().getResource(path));
 
 		int[] pixels = new int[map.getWidth() * map.getHeight()];
@@ -73,11 +83,16 @@ public class Dungeon {
 					case 0xFF00FF00:
 						Slime slime = new Slime();
 						slime.setPosition(x * 16, y * 16);
+						
 						this.slimes.add(slime);
 						this.floors.add(new Floor(x * 16, y * 16, 16, 16, spritesheet));
 						break;
-					case 0xFFFF0000:
-						this.stairways.add(new Stairway(x * 16, y * 16, 16, 16, spritesheet));
+					case 0xFFFFFF00:
+						this.stairway.setPosition(x * 16, y * 16);
+						break;
+					case 0xFF00FFFF:
+						wallSpecial.setPosition(x * 16, y * 16);
+						this.floors.add(new Floor(x * 16, y * 16, 16, 16, spritesheet));
 						break;
 					case 0xFF0000FF:
 						this.player.setPosition(x * 16, y * 16);
@@ -89,17 +104,21 @@ public class Dungeon {
 	}
 
 	public void tick() {
-		List<Slime> slimeRemoved = new ArrayList<>();
+		List<Slime> slimesRemoved = new ArrayList<>();
 		
 		for (Slime slime : slimes) {
 			slime.tick(this);
 			
 			if (slime.isDead()) {
-				slimeRemoved.add(slime);
+				slimesRemoved.add(slime);
 			}
 		}
 		
-		slimes.removeAll(slimeRemoved);
+		slimes.removeAll(slimesRemoved);
+		
+		if (slimes.isEmpty()) {
+			wallSpecial.setPosition(0, 0);
+		}
 		
 		player.tick(this);
 	}
@@ -113,15 +132,23 @@ public class Dungeon {
 			wall.render(graphics);
 		}
 		
-		for (Stairway stairway : stairways) {
-			stairway.render(graphics);
-		}
+		wallSpecial.render(graphics);
+		
+		stairway.render(graphics);
 		
 		for (Slime slime : slimes) {
 			slime.render(graphics);
 		}
 
 		player.render(graphics);
+	}
+	
+	public int getLevel() {
+		return level;
+	}
+	
+	public boolean nextLevel() {
+		return player.getRectangle().intersects(stairway.getRectangle());
 	}
 	
 	public boolean isFree(Entity entity, int dir) {
@@ -135,6 +162,10 @@ public class Dungeon {
 			rectangle.x += entity.getSpeed();
 		} else if (dir == LEFT) {
 			rectangle.x -= entity.getSpeed();
+		}
+		
+		if (rectangle.intersects(wallSpecial.getRectangle())) {
+			return false;
 		}
 		
 		for (Wall wall: walls) {

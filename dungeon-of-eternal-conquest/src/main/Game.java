@@ -62,6 +62,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private final Credits credits;
 	private final Tutorial tutorial;
 	
+	private final int maxLevel;
+	
 	private Player player;
 	private Dungeon dungeon;
 
@@ -85,18 +87,19 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setVisible(true);
 
-		renderer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		this.renderer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
-		spritesheet = new Spritesheet("/sprites/dungeon/tiles.png");
+		this.spritesheet = new Spritesheet("/sprites/dungeon/tiles.png");
 
-		pause = new Pause();
-		menu = new Menu();
-		gameOver = new GameOver();
-		credits = new Credits();
-		tutorial = new Tutorial();
+		this.pause = new Pause();
+		this.menu = new Menu();
+		this.gameOver = new GameOver();
+		this.credits = new Credits();
+		this.tutorial = new Tutorial();
 		
-		player = new Player();
-		dungeon = new Dungeon("/levels/level-01.png", spritesheet, player);
+		this.maxLevel = 2;
+		
+		this.restart();
 	}
 
 	public synchronized void start() {
@@ -131,10 +134,19 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public void restart() {
 		try {
 			player = new Player();
-			dungeon = new Dungeon("/levels/level-01.png", spritesheet, player);
+			this.setLevel(1);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
+			this.exitGame();
+		}
+	}
+	
+	public void setLevel(int level) {
+		try {
+			dungeon = new Dungeon(level, spritesheet, player);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
+			this.exitGame();
 		}
 	}
 
@@ -148,6 +160,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			
 			if (player.isDead()) {
 				gameState = GAME_OVER;
+			} else if (dungeon.nextLevel() && dungeon.getLevel() < maxLevel) {
+				this.setLevel(dungeon.getLevel() + 1);
 			}
 		} else if (gameState == GAME_PAUSED) {
 			pause.tick();

@@ -6,10 +6,10 @@ import java.awt.image.BufferedImage;
 
 import main.dungeon.Camera;
 
-public class Tile {
+public abstract class Tile {
 
-	private final int x;
-	private final int y;
+	private int x;
+	private int y;
 	private final int width;
 	private final int height;
 
@@ -20,7 +20,13 @@ public class Tile {
 		this.y = y;
 		this.width = width;
 		this.height = height;
+
 		this.sprite = sprite;
+	}
+
+	public void setPosition(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	public Rectangle getRectangle() {
