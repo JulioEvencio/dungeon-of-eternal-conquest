@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 
 import game.entities.Enemy;
 import game.entities.Entity;
+import game.entities.FlyingEye;
 import game.entities.Goblin;
 import game.entities.Player;
 import game.entities.Slime;
@@ -100,6 +101,13 @@ public class Dungeon {
 						goblin.setPosition(x * 16, y * 16);
 						
 						this.enemies.add(goblin);
+						this.floors.add(new Floor(x * 16, y * 16, 16, 16, spritesheet));
+						break;
+					case 0xFFFF0000:
+						FlyingEye flyingEye = new FlyingEye();
+						flyingEye.setPosition(x * 16, y * 16);
+						
+						this.enemies.add(flyingEye);
 						this.floors.add(new Floor(x * 16, y * 16, 16, 16, spritesheet));
 						break;
 					case 0xFFFFFF00:

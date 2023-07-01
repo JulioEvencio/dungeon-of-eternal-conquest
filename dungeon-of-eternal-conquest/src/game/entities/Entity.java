@@ -94,6 +94,10 @@ public abstract class Entity {
 		movingRightEntity = new BufferedImage[this.maxIndex];
 		movingLeftEntity = new BufferedImage[this.maxIndex];
 		
+		this.loadSpritesheet(spritePath);
+	}
+	
+	protected void loadSpritesheet(String spritePath) throws IOException {
 		Spritesheet spritesheet = new Spritesheet(spritePath);
 
 		for (int i = 0; i < idleRightEntity.length; i++) {
