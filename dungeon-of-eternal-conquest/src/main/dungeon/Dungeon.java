@@ -1,5 +1,6 @@
 package main.dungeon;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -16,6 +17,7 @@ import main.dungeon.tile.Wall;
 import main.entities.Entity;
 import main.entities.Player;
 import main.entities.Slime;
+import main.util.Particle;
 import main.util.Spritesheet;
 
 public class Dungeon {
@@ -39,6 +41,8 @@ public class Dungeon {
 	private final List<Floor> floors;
 	
 	private final List<Slime> slimes;
+	
+	private final List<Particle> particles;
 
 	public Dungeon(int level, Spritesheet spritesheet, Player player) throws IOException {
 		this.UP = 1;
@@ -57,6 +61,8 @@ public class Dungeon {
 		this.floors = new ArrayList<>();
 		
 		this.slimes = new ArrayList<>();
+		
+		this.particles = new ArrayList<>();
 
 		String path = String.format("/levels/level-%02d.png", this.level);
 		
@@ -111,10 +117,23 @@ public class Dungeon {
 			
 			if (slime.isDead()) {
 				slimesRemoved.add(slime);
+				this.generateParticles(100, (int) slime.getX(), (int) slime.getY(), new Color(51, 112, 59));
 			}
 		}
 		
 		slimes.removeAll(slimesRemoved);
+		
+		List<Particle> particlesRemoved = new ArrayList<>();
+		
+		for (Particle particle : particles) {
+			particle.tick();
+			
+			if (particle.isDead()) {
+				particlesRemoved.add(particle);
+			}
+		}
+		
+		particles.removeAll(particlesRemoved);
 		
 		if (slimes.isEmpty()) {
 			wallSpecial.setPosition(0, 0);
@@ -139,8 +158,18 @@ public class Dungeon {
 		for (Slime slime : slimes) {
 			slime.render(graphics);
 		}
+		
+		for (Particle particle : particles) {
+			particle.render(graphics);
+		}
 
 		player.render(graphics);
+	}
+	
+	public void generateParticles(int amount, int x, int y, Color color) {
+		for (int i = 0; i < amount; i++) {
+			particles.add(new Particle(x, y, 3, 3, color));
+		}
 	}
 	
 	public int getLevel() {
