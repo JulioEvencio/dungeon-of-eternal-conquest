@@ -41,54 +41,52 @@ public class Slime extends Entity {
 
 	@Override
 	public void tick(Dungeon dungeon) {
-		if (!dungeon.player.getRectangle().intersects(this.getRectangleVision())) {
-			return;
-		}
-		
-		moved = false;
-		
-		if (dungeon.player.isAttacking() && dungeon.player.getMaskAttack().intersects(this.getRectangle())) {
-			this.takeDamage(dungeon.player.dealDamage());
-		}
-		
-		if (dungeon.player.getRectangle().intersects(this.getRectangle())) {
-			dungeon.player.takeDamage(this.dealDamage());
-		} else {
-			if (maskX < dungeon.player.getX() && dungeon.isFree(this, dungeon.RIGHT)) {
-				moved = true;
-				x += speed;
-				maskX += speed;
-				dir = dirRight;
-			} else if (maskX > dungeon.player.getX() && dungeon.isFree(this, dungeon.LEFT)) {
-				moved = true;
-				x -= speed;
-				maskX -= speed;
-				dir = dirLeft;
+		if (dungeon.player.getRectangle().intersects(this.getRectangleVision())) {
+			moved = false;
+			
+			if (dungeon.player.isAttacking() && dungeon.player.getMaskAttack().intersects(this.getRectangle())) {
+				this.takeDamage(dungeon.player.dealDamage());
 			}
 			
-			if (maskY < dungeon.player.getY() && dungeon.isFree(this, dungeon.DOWN)) {
-				moved = true;
-				y += speed;
-				maskY += speed;
-			} else if (maskY > dungeon.player.getY() && dungeon.isFree(this, dungeon.UP)) {
-				moved = true;
-				y -= speed;
-				maskY -= speed;
+			if (dungeon.player.getRectangle().intersects(this.getRectangle())) {
+				dungeon.player.takeDamage(this.dealDamage());
+			} else {
+				if (maskX < dungeon.player.getX() && dungeon.isFree(this, dungeon.RIGHT)) {
+					moved = true;
+					x += speed;
+					maskX += speed;
+					dir = dirRight;
+				} else if (maskX > dungeon.player.getX() && dungeon.isFree(this, dungeon.LEFT)) {
+					moved = true;
+					x -= speed;
+					maskX -= speed;
+					dir = dirLeft;
+				}
+				
+				if (maskY < dungeon.player.getY() && dungeon.isFree(this, dungeon.DOWN)) {
+					moved = true;
+					y += speed;
+					maskY += speed;
+				} else if (maskY > dungeon.player.getY() && dungeon.isFree(this, dungeon.UP)) {
+					moved = true;
+					y -= speed;
+					maskY -= speed;
+				}
 			}
-		}
 
-		frames++;
+			frames++;
 
-		if (frames == maxFrames) {
-			frames = 0;
-			index++;
+			if (frames == maxFrames) {
+				frames = 0;
+				index++;
 
-			if (index == maxIndex) {
-				index = 0;
+				if (index == maxIndex) {
+					index = 0;
+				}
 			}
+			
+			this.updateMask();
 		}
-		
-		this.updateMask();
 	}
 
 	public void render(Graphics graphics) {
