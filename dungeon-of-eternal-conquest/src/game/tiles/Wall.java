@@ -1,6 +1,6 @@
-package main.dungeon.tile;
+package game.tiles;
 
-import main.util.Spritesheet;
+import game.resources.Spritesheet;
 
 public class Wall extends Tile {
 

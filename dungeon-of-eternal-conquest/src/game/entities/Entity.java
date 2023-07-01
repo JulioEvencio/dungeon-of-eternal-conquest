@@ -1,4 +1,4 @@
-package main.entities;
+package game.entities;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-import main.dungeon.Camera;
-import main.dungeon.Dungeon;
-import main.util.Spritesheet;
+import game.resources.Spritesheet;
+import game.scenarios.Camera;
+import game.scenarios.Dungeon;
 
 public abstract class Entity {
 

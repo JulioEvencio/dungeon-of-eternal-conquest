@@ -1,4 +1,4 @@
-package main.util;
+package game.resources;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package main.entities;
+package game.entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,11 +7,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
 
-import main.Game;
-import main.dungeon.Camera;
-import main.dungeon.Dungeon;
-import main.util.Spritesheet;
-import main.weapons.Punch;
+import game.main.Game;
+import game.resources.Spritesheet;
+import game.scenarios.Camera;
+import game.scenarios.Dungeon;
+import game.weapons.Punch;
 
 public class Player extends Entity {
 

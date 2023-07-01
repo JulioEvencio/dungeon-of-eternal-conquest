@@ -1,10 +1,10 @@
-package main.dungeon.tile;
+package game.tiles;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import main.dungeon.Camera;
+import game.scenarios.Camera;
 
 public abstract class Tile {
 

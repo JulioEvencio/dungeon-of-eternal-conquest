@@ -1,8 +1,8 @@
-package main.entities;
+package game.entities;
 
 import java.io.IOException;
 
-import main.dungeon.Dungeon;
+import game.scenarios.Dungeon;
 
 public class Slime extends Entity {
 

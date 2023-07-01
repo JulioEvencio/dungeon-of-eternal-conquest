@@ -1,4 +1,4 @@
-package main.weapons;
+package game.weapons;
 
 import java.io.IOException;
 

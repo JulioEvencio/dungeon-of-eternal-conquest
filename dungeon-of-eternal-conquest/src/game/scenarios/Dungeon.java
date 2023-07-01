@@ -1,4 +1,4 @@
-package main.dungeon;
+package game.scenarios;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,14 +11,14 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import main.dungeon.tile.Floor;
-import main.dungeon.tile.Stairway;
-import main.dungeon.tile.Wall;
-import main.entities.Entity;
-import main.entities.Player;
-import main.entities.Slime;
-import main.util.Particle;
-import main.util.Spritesheet;
+import game.entities.Entity;
+import game.entities.Player;
+import game.entities.Slime;
+import game.resources.Spritesheet;
+import game.tiles.Floor;
+import game.tiles.Stairway;
+import game.tiles.Wall;
+import game.util.Particle;
 
 public class Dungeon {
 

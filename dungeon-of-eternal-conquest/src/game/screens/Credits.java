@@ -1,10 +1,10 @@
-package main.menu;
+package game.screens;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
-import main.Game;
+import game.main.Game;
 
 public class Credits {
 	

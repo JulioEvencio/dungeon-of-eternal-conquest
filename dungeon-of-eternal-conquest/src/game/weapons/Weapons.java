@@ -1,4 +1,4 @@
-package main.weapons;
+package game.weapons;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
 
-import main.dungeon.Camera;
-import main.util.Spritesheet;
+import game.resources.Spritesheet;
+import game.scenarios.Camera;
 
 public abstract class Weapons {
 

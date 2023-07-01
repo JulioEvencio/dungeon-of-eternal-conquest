@@ -1,4 +1,4 @@
-package main.dungeon;
+package game.scenarios;
 
 public class Camera {
 

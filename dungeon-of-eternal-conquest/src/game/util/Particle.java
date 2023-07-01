@@ -1,10 +1,10 @@
-package main.util;
+package game.util;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
 
-import main.dungeon.Camera;
+import game.scenarios.Camera;
 
 public class Particle {
 

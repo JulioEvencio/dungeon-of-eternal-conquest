@@ -1,4 +1,4 @@
-package main;
+package game.main;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -15,14 +15,14 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import main.dungeon.Dungeon;
-import main.entities.Player;
-import main.menu.Credits;
-import main.menu.GameOver;
-import main.menu.Menu;
-import main.menu.Pause;
-import main.menu.Tutorial;
-import main.util.Spritesheet;
+import game.entities.Player;
+import game.resources.Spritesheet;
+import game.scenarios.Dungeon;
+import game.screens.Credits;
+import game.screens.GameOver;
+import game.screens.Menu;
+import game.screens.Pause;
+import game.screens.Tutorial;
 
 public class Game extends Canvas implements Runnable, KeyListener {
 
