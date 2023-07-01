@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import game.scenarios.Camera;
+import game.util.Camera;
 
 public abstract class Tile {
 

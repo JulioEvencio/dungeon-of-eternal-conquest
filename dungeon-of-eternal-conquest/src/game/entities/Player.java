@@ -9,8 +9,8 @@ import java.util.Random;
 
 import game.main.Game;
 import game.resources.Spritesheet;
-import game.scenarios.Camera;
 import game.scenarios.Dungeon;
+import game.util.Camera;
 import game.weapons.Punch;
 
 public class Player extends Entity {

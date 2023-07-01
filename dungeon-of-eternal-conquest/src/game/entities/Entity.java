@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 import game.resources.Spritesheet;
-import game.scenarios.Camera;
 import game.scenarios.Dungeon;
+import game.util.Camera;
 
 public abstract class Entity {
 

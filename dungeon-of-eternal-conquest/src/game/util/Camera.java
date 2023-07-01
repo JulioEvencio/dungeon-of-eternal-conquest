@@ -1,4 +1,4 @@
-package game.scenarios;
+package game.util;
 
 public class Camera {
 

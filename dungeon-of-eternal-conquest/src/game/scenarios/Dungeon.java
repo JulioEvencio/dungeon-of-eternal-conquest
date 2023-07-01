@@ -11,7 +11,9 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import game.entities.Enemy;
 import game.entities.Entity;
+import game.entities.Goblin;
 import game.entities.Player;
 import game.entities.Slime;
 import game.resources.Spritesheet;
@@ -40,7 +42,7 @@ public class Dungeon {
 	private final List<Wall> walls;
 	private final List<Floor> floors;
 	
-	private final List<Slime> slimes;
+	private final List<Enemy> enemies;
 	
 	private final List<Particle> particles;
 
@@ -60,7 +62,7 @@ public class Dungeon {
 		this.walls = new ArrayList<>();
 		this.floors = new ArrayList<>();
 		
-		this.slimes = new ArrayList<>();
+		this.enemies = new ArrayList<>();
 		
 		this.particles = new ArrayList<>();
 
@@ -90,7 +92,14 @@ public class Dungeon {
 						Slime slime = new Slime();
 						slime.setPosition(x * 16, y * 16);
 						
-						this.slimes.add(slime);
+						this.enemies.add(slime);
+						this.floors.add(new Floor(x * 16, y * 16, 16, 16, spritesheet));
+						break;
+					case 0xFFFF00FF:
+						Goblin goblin = new Goblin();
+						goblin.setPosition(x * 16, y * 16);
+						
+						this.enemies.add(goblin);
 						this.floors.add(new Floor(x * 16, y * 16, 16, 16, spritesheet));
 						break;
 					case 0xFFFFFF00:
@@ -110,18 +119,18 @@ public class Dungeon {
 	}
 
 	public void tick() {
-		List<Slime> slimesRemoved = new ArrayList<>();
+		List<Enemy> enemiesRemoved = new ArrayList<>();
 		
-		for (Slime slime : slimes) {
-			slime.tick(this);
+		for (Enemy enemy : enemies) {
+			enemy.tick(this);
 			
-			if (slime.isDead()) {
-				slimesRemoved.add(slime);
-				this.generateParticles(100, (int) slime.getX(), (int) slime.getY(), new Color(51, 112, 59));
+			if (enemy.isDead()) {
+				enemiesRemoved.add(enemy);
+				this.generateParticles(100, (int) enemy.getX(), (int) enemy.getY(), enemy.getColor());
 			}
 		}
 		
-		slimes.removeAll(slimesRemoved);
+		enemies.removeAll(enemiesRemoved);
 		
 		List<Particle> particlesRemoved = new ArrayList<>();
 		
@@ -135,7 +144,7 @@ public class Dungeon {
 		
 		particles.removeAll(particlesRemoved);
 		
-		if (slimes.isEmpty()) {
+		if (enemies.isEmpty()) {
 			wallSpecial.setPosition(0, 0);
 		}
 		
@@ -155,8 +164,8 @@ public class Dungeon {
 		
 		stairway.render(graphics);
 		
-		for (Slime slime : slimes) {
-			slime.render(graphics);
+		for (Enemy enemy : enemies) {
+			enemy.render(graphics);
 		}
 		
 		for (Particle particle : particles) {

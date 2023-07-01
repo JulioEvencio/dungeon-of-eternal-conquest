@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Random;
 
 import game.resources.Spritesheet;
-import game.scenarios.Camera;
+import game.util.Camera;
 
 public abstract class Weapons {
 

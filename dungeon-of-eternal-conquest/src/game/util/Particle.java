@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
 
-import game.scenarios.Camera;
-
 public class Particle {
 
 	private int x;
