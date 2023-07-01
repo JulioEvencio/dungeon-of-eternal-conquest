@@ -136,8 +136,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			player = new Player();
 			this.setLevel(1);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
-			this.exitGame();
+			this.exitWithError();
 		}
 	}
 	
@@ -145,13 +144,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		try {
 			dungeon = new Dungeon(level, spritesheet, player);
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
-			this.exitGame();
+			this.exitWithError();
 		}
 	}
 
 	public void exitGame() {
 		System.exit(0);
+	}
+	
+	public void exitWithError() {
+		JOptionPane.showMessageDialog(frame, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
+		this.exitGame();
 	}
 	
 	public void tick() {
