@@ -113,7 +113,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		this.credits = new Credits();
 		this.tutorial = new Tutorial();
 		
-		this.maxLevel = 4;
+		this.maxLevel = 11;
 		
 		this.restart();
 		musicNow = soundMenu;
