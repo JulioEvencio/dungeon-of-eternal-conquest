@@ -20,6 +20,7 @@ import game.resources.Sound;
 import game.resources.Spritesheet;
 import game.scenarios.Dungeon;
 import game.screens.Credits;
+import game.screens.FinalScreen;
 import game.screens.GameOver;
 import game.screens.Menu;
 import game.screens.Pause;
@@ -45,6 +46,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static final int GAME_EXIT = 5;
 	public static final int GAME_CREDITS = 6;
 	public static final int GAME_TUTORIAL = 7;
+	public static final int GAME_FINAL_SCREEN = 8;
 	
 	private int gameState;
 
@@ -62,6 +64,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private final GameOver gameOver;
 	private final Credits credits;
 	private final Tutorial tutorial;
+	private final FinalScreen finalScreen;
 	
 	private final int maxLevel;
 	
@@ -112,6 +115,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		this.gameOver = new GameOver();
 		this.credits = new Credits();
 		this.tutorial = new Tutorial();
+		this.finalScreen = new FinalScreen();
 		
 		this.maxLevel = 11;
 		
@@ -209,6 +213,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 				this.updateGameState(GAME_OVER);
 			} else if (dungeon.nextLevel() && dungeon.getLevel() < maxLevel) {
 				this.setLevel(dungeon.getLevel() + 1);
+			} else if (dungeon.getLevel() == maxLevel) {
+				this.updateGameState(GAME_FINAL_SCREEN);
 			}
 		} else if (gameState == GAME_PAUSED) {
 			pause.tick();
@@ -271,6 +277,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 				case GAME_CREDITS:
 					credits.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
 					break;
+				case GAME_FINAL_SCREEN:
+					finalScreen.renderFullscreen(g, Toolkit.getDefaultToolkit().getScreenSize().width, Toolkit.getDefaultToolkit().getScreenSize().height);
+					break;
 			}
 		} else {
 			g.drawImage(renderer, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
@@ -290,6 +299,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 					break;
 				case GAME_CREDITS:
 					credits.render(g);
+					break;
+				case GAME_FINAL_SCREEN:
+					finalScreen.render(g);
 					break;
 			}
 		}
@@ -349,15 +361,15 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			}
 		} else if (gameState == GAME_CREDITS || gameState == GAME_TUTORIAL) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-				gameState = GAME_MENU;
-				
 				this.updateGameState(GAME_MENU);
 			}
 		} else if (gameState == GAME_OVER) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-				gameState = GAME_MENU;
-				
 				this.updateGameState(GAME_MENU);
+			}
+		} else if (gameState == GAME_FINAL_SCREEN) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				this.updateGameState(GAME_CREDITS);
 			}
 		}
 		
