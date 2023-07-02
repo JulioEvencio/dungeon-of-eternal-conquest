@@ -42,7 +42,7 @@ public class Sound {
 
 	private void loadClip() {
 		try {
-			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Sound.class.getResourceAsStream(path));
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Sound.class.getResource(path));
 			AudioFormat format = audioInputStream.getFormat();
 			DataLine.Info info = new DataLine.Info(Clip.class, format);
 			clip = (Clip) AudioSystem.getLine(info);
