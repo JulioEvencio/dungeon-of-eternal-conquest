@@ -6,10 +6,11 @@ An action-adventure game where the objective is to descend as deep as possible i
 
 This project is just a simple `Java` project, so compile it normally using a `JDK` (I recommend `OpenJDK 17`). The main class that contains the `main method` is `main.Game`
 
-## Link
+## Links
+
+Click [here](https://julio-igreja.itch.io/dungeon-of-eternal-conquest) to download the game.
 
 Click [here](https://www.youtube.com/watch?v=s8YLqPCxTTI) to watch the game demonstration video.
-
 ## Images
 
 ![img-01](https://github.com/JulioEvencio/dungeon-of-eternal-conquest/assets/65574850/d11547d4-8130-4872-99c7-89e2c2b38577)
