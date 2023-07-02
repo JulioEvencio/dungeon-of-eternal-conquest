@@ -160,6 +160,9 @@ public class Dungeon {
 	}
 
 	public void render(Graphics graphics) {
+		stairway.render(graphics);
+		wallSpecial.render(graphics);
+		
 		for (Floor floor : floors) {
 			floor.render(graphics);
 		}
@@ -167,10 +170,6 @@ public class Dungeon {
 		for (Wall wall: walls) {
 			wall.render(graphics);
 		}
-		
-		wallSpecial.render(graphics);
-		
-		stairway.render(graphics);
 		
 		for (Enemy enemy : enemies) {
 			enemy.render(graphics);
