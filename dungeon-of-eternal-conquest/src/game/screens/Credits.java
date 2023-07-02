@@ -22,6 +22,9 @@ public class Credits {
 		graphics.drawString("> Programmer: Júlio Igreja", Game.WIDTH * Game.SCALE / 2 - 330, 160);
 		graphics.drawString("> Access: https://github.com/JulioEvencio", Game.WIDTH * Game.SCALE / 2 - 330, 180);
 		
+		graphics.drawString("> Sounds: BloodPixelHero", Game.WIDTH * Game.SCALE / 2 - 330, 210);
+		graphics.drawString("> Access: https://freesound.org/people/BloodPixelHero/", Game.WIDTH * Game.SCALE / 2 - 330, 230);
+		
 		graphics.drawString("> Sprites: o_lobster", Game.WIDTH * Game.SCALE / 2 - 330, 260);
 		graphics.drawString("> Access: https://o-lobster.itch.io/", Game.WIDTH * Game.SCALE / 2 - 330, 280);
 		
@@ -47,6 +50,9 @@ public class Credits {
 		
 		graphics.drawString("> Programmer: Júlio Igreja", width / 2 - 300, height / 2 - 60);
 		graphics.drawString("> Access: https://github.com/JulioEvencio", width / 2 - 300, height / 2 - 40);
+		
+		graphics.drawString("> Sounds: BloodPixelHero", width / 2 - 300, height / 2 + 0);
+		graphics.drawString("> Access: https://freesound.org/people/BloodPixelHero/", width / 2 - 300, height / 2 + 20);
 		
 		graphics.drawString("> Sprites: o_lobster", width / 2 - 300, height / 2 + 60);
 		graphics.drawString("> Access: https://o-lobster.itch.io/", width / 2 - 300, height / 2 + 80);

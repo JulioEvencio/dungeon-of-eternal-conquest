@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import game.entities.Player;
+import game.resources.Sound;
 import game.resources.Spritesheet;
 import game.scenarios.Dungeon;
 import game.screens.Credits;
@@ -66,9 +67,24 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	
 	private Player player;
 	private Dungeon dungeon;
+	
+	private boolean enableSound;
+	
+	private Sound musicNow;
+	private Sound soundMenu;
+	private Sound soundGame;
 
 	public Game() throws IOException {
-		this.gameState = GAME_MENU;
+		this.enableSound = true;
+		
+		soundMenu = new Sound("/sounds/menu.wav");
+		soundMenu.start();
+		
+		soundGame = new Sound("/sounds/game.wav");
+		soundGame.start();
+		
+		musicNow = soundMenu;
+		this.updateGameState(GAME_MENU);
 		
 		this.showFPS = false;
 		this.isFullscreen = false;
@@ -100,6 +116,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		this.maxLevel = 4;
 		
 		this.restart();
+		musicNow = soundMenu;
 	}
 
 	public synchronized void start() {
@@ -134,6 +151,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public void restart() {
 		try {
 			player = new Player();
+			
+			this.setMusicNow(soundGame);
 			this.setLevel(1);
 		} catch (Exception e) {
 			this.exitWithError();
@@ -157,12 +176,37 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		this.exitGame();
 	}
 	
+	public void updateGameState(int gameState) {
+		this.gameState = gameState;
+		
+		if (gameState == GAME_RUN && musicNow != soundGame) {
+			this.setMusicNow(soundGame);
+		} else if (musicNow != soundMenu) {
+			this.setMusicNow(soundMenu);
+		}
+	}
+	
+	public void setMusicNow(Sound sound) {
+		soundMenu.stop();
+		soundGame.stop();
+		
+		musicNow.stop();
+		musicNow = sound;
+		musicNow.play();
+	}
+	
 	public void tick() {
+		if (enableSound) {
+			musicNow.play();
+		} else {
+			musicNow.stop();
+		}
+		
 		if (gameState == GAME_RUN) {
 			dungeon.tick();
 			
 			if (player.isDead()) {
-				gameState = GAME_OVER;
+				this.updateGameState(GAME_OVER);
 			} else if (dungeon.nextLevel() && dungeon.getLevel() < maxLevel) {
 				this.setLevel(dungeon.getLevel() + 1);
 			}
@@ -171,7 +215,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			
 			gameState = pause.getOption();
 			
-			if (gameState == GAME_EXIT) {
+			if (gameState == GAME_RUN) {
+				this.updateGameState(GAME_RUN);
+			} else if (gameState == GAME_EXIT) {
 				this.exitGame();
 			}
 		} else if (gameState == GAME_MENU) {
@@ -271,7 +317,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			dungeon.keyReleased(e);
 			
 			if (e.getKeyCode() == KeyEvent.VK_P || e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-				gameState = GAME_PAUSED;
+				this.updateGameState(GAME_PAUSED);
 			}
 		} else if (gameState == GAME_PAUSED) { 
 			if (e.getKeyCode() == KeyEvent.VK_W) {
@@ -287,7 +333,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			}
 			
 			if (e.getKeyCode() == KeyEvent.VK_P || e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-				gameState = GAME_RUN;
+				this.updateGameState(GAME_RUN);
 			}
 		} else if (gameState == GAME_MENU) {
 			if (e.getKeyCode() == KeyEvent.VK_W) {
@@ -304,10 +350,14 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		} else if (gameState == GAME_CREDITS || gameState == GAME_TUTORIAL) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				gameState = GAME_MENU;
+				
+				this.updateGameState(GAME_MENU);
 			}
 		} else if (gameState == GAME_OVER) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				gameState = GAME_MENU;
+				
+				this.updateGameState(GAME_MENU);
 			}
 		}
 		
@@ -317,6 +367,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		
 		if (e.getKeyCode() == KeyEvent.VK_F3) {
 			showFPS = !showFPS;
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_F4) {
+			enableSound = !enableSound;
 		}
 	}
 	

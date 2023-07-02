@@ -24,6 +24,7 @@ public class Tutorial {
 		graphics.drawString("> ESC or P -> use to pause the game", Game.WIDTH * Game.SCALE / 2 - 330, 200);
 		graphics.drawString("> F2 -> to enable fullscreen", Game.WIDTH * Game.SCALE / 2 - 330, 220);
 		graphics.drawString("> F3 -> to enable/disable FPS", Game.WIDTH * Game.SCALE / 2 - 330, 240);
+		graphics.drawString("> F4 -> to enable/disable music", Game.WIDTH * Game.SCALE / 2 - 330, 260);
 		
 		graphics.setColor(Color.GREEN);
 		graphics.setFont(new Font("arial", Font.BOLD, 24));
@@ -47,6 +48,7 @@ public class Tutorial {
 		graphics.drawString("> ESC or P -> use to pause the game", width / 2 - 300, height / 2 - 20);
 		graphics.drawString("> F2 -> to disable fullscreen", width / 2 - 300, height / 2 - 00);
 		graphics.drawString("> F3 -> to enable/disable FPS", width / 2 - 300, height / 2 + 20);
+		graphics.drawString("> F4 -> to enable/disable music", width / 2 - 300, height / 2 + 40);
 		
 		graphics.setColor(Color.GREEN);
 		graphics.setFont(new Font("arial", Font.BOLD, 24));
