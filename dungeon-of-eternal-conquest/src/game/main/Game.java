@@ -2,9 +2,12 @@ package game.main;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -12,6 +15,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -105,6 +109,14 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		this.frame.setLocationRelativeTo(null);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setVisible(true);
+		
+		Image imageIcon = ImageIO.read(getClass().getResource("/sprites/icon.png"));
+		this.frame.setIconImage(imageIcon);
+		
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Image imageCursor = ImageIO.read(getClass().getResource("/sprites/cursor.png"));
+		Cursor cursor = toolkit.createCustomCursor(imageCursor, new Point(0, 0), "cursor");
+		frame.setCursor(cursor);
 
 		this.renderer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
