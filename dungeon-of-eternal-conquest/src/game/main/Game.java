@@ -183,9 +183,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public void updateGameState(int gameState) {
 		this.gameState = gameState;
 		
-		if (gameState == GAME_RUN) {
+		if (gameState == GAME_RUN && musicNow != soundGame) {
 			this.setMusicNow(soundGame);
-		} else {
+		} else if (musicNow != soundMenu) {
 			this.setMusicNow(soundMenu);
 		}
 	}
