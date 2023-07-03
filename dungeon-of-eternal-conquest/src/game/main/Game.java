@@ -78,20 +78,15 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private boolean enableSound;
 	
 	private Sound musicNow;
-	private Sound soundMenu;
-	private Sound soundGame;
+	private final Sound soundMenu;
+	private final Sound soundGame;
 
-	public Game() throws IOException {
-		this.enableSound = true;
-		
+	public Game() throws IOException, InterruptedException {
 		soundMenu = new Sound("/sounds/menu.wav");
 		soundMenu.start();
 		
 		soundGame = new Sound("/sounds/game.wav");
 		soundGame.start();
-		
-		musicNow = soundMenu;
-		this.updateGameState(GAME_MENU);
 		
 		this.showFPS = false;
 		this.isFullscreen = false;
@@ -130,9 +125,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		this.finalScreen = new FinalScreen();
 		
 		this.maxLevel = 11;
+		this.enableSound = true;
 		
-		this.restart();
 		musicNow = soundMenu;
+		this.restart();
+		this.updateGameState(GAME_MENU);
 	}
 
 	public synchronized void start() {
@@ -147,7 +144,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			Game.exitWithError();
 		}
 	}
 	
@@ -171,7 +168,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			this.setMusicNow(soundGame);
 			this.setLevel(1);
 		} catch (Exception e) {
-			this.exitWithError();
+			Game.exitWithError();
 		}
 	}
 	
@@ -179,43 +176,34 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		try {
 			dungeon = new Dungeon(level, spritesheet, player);
 		} catch (Exception e) {
-			this.exitWithError();
+			Game.exitWithError();
 		}
-	}
-
-	public void exitGame() {
-		System.exit(0);
-	}
-	
-	public void exitWithError() {
-		JOptionPane.showMessageDialog(frame, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
-		this.exitGame();
 	}
 	
 	public void updateGameState(int gameState) {
 		this.gameState = gameState;
 		
-		if (gameState == GAME_RUN && musicNow != soundGame) {
+		if (gameState == GAME_RUN) {
 			this.setMusicNow(soundGame);
-		} else if (musicNow != soundMenu) {
+		} else {
 			this.setMusicNow(soundMenu);
 		}
 	}
 	
 	public void setMusicNow(Sound sound) {
-		soundMenu.stop();
-		soundGame.stop();
+		soundMenu.soundStop();
+		soundGame.soundStop();
 		
-		musicNow.stop();
+		musicNow.soundStop();
 		musicNow = sound;
-		musicNow.play();
+		musicNow.soundPlay();
 	}
 	
 	public void tick() {
 		if (enableSound) {
-			musicNow.play();
+			musicNow.soundPlay();
 		} else {
-			musicNow.stop();
+			musicNow.soundStop();
 		}
 		
 		if (gameState == GAME_RUN) {
@@ -236,7 +224,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			if (gameState == GAME_RUN) {
 				this.updateGameState(GAME_RUN);
 			} else if (gameState == GAME_EXIT) {
-				this.exitGame();
+				Game.exitGame();
 			}
 		} else if (gameState == GAME_MENU) {
 			menu.tick();
@@ -246,7 +234,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			if (gameState == GAME_RUN) {
 				this.restart();
 			} else if (gameState == GAME_EXIT) {
-				this.exitGame();
+				Game.exitGame();
 			}
 		}
 	}
@@ -442,10 +430,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		try {
 			new Game().start();
 		} catch (Exception e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
+			Game.exitWithError();
 		}
+	}
+	
+	public static void exitGame() {
+		System.exit(0);
+	}
+	
+	public static void exitWithError() {
+		JOptionPane.showMessageDialog(null, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
+		Game.exitGame();
 	}
 
 }
