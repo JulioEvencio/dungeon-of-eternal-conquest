@@ -60,7 +60,7 @@ public class Sound {
 			clip = (Clip) AudioSystem.getLine(info);
 			clip.open(audioInputStream);
 		} catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-			Game.exitWithError();
+			Game.exitWithError("Error loading resources");
 		}
 	}
 

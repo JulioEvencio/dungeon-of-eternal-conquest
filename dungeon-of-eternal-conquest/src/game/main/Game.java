@@ -144,7 +144,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
-			Game.exitWithError();
+			Game.exitWithError("An error has occurred. The program will be terminated.");
 		}
 	}
 	
@@ -168,7 +168,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			this.setMusicNow(soundGame);
 			this.setLevel(1);
 		} catch (Exception e) {
-			Game.exitWithError();
+			Game.exitWithError("Error loading resources");
 		}
 	}
 	
@@ -176,7 +176,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		try {
 			dungeon = new Dungeon(level, spritesheet, player);
 		} catch (Exception e) {
-			Game.exitWithError();
+			Game.exitWithError("Error loading resources");
 		}
 	}
 	
@@ -430,7 +430,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		try {
 			new Game().start();
 		} catch (Exception e) {
-			Game.exitWithError();
+			Game.exitWithError("An error has occurred. The program will be terminated.");
 		}
 	}
 	
@@ -438,8 +438,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		System.exit(0);
 	}
 	
-	public static void exitWithError() {
-		JOptionPane.showMessageDialog(null, "An error has occurred. The program will be terminated.", "Error", JOptionPane.ERROR_MESSAGE);
+	public static void exitWithError(String error) {
+		JOptionPane.showMessageDialog(null, error, "Error", JOptionPane.ERROR_MESSAGE);
 		Game.exitGame();
 	}
 
