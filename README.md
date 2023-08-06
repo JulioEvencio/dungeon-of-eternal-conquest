@@ -4,7 +4,7 @@ An action-adventure game where the objective is to descend as deep as possible i
 
 ## How to run
 
-This project is just a simple `Java` project, so compile it normally using a `JDK` (I recommend `OpenJDK 17`). The main class that contains the `main method` is `main.Game`
+This project is just a simple `Java` project, so compile it normally using a `JDK` (I recommend `OpenJDK 17`). The main class that contains the `main method` is `game.main.Game`
 
 ## Links
 
