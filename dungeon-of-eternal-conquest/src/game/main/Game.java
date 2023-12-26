@@ -20,7 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import game.entities.Player;
-import game.resources.Sound;
+import game.resources.Audio;
 import game.resources.Spritesheet;
 import game.scenarios.Dungeon;
 import game.screens.Credits;
@@ -77,16 +77,14 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	
 	private boolean enableSound;
 	
-	private Sound musicNow;
-	private final Sound soundMenu;
-	private final Sound soundGame;
+	private Audio musicNow;
+	private final Audio soundMenu;
+	private final Audio soundGame;
 
 	public Game() throws IOException, InterruptedException {
-		soundMenu = new Sound("/sounds/menu.wav");
-		soundMenu.start();
-		
-		soundGame = new Sound("/sounds/game.wav");
-		soundGame.start();
+		soundMenu = new Audio("/sounds/menu.wav");
+		soundGame = new Audio("/sounds/game.wav");
+		this.musicNow = this.soundMenu;
 		
 		this.showFPS = false;
 		this.isFullscreen = false;
@@ -127,7 +125,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		this.maxLevel = 11;
 		this.enableSound = true;
 		
-		musicNow = soundMenu;
 		this.restart();
 		this.updateGameState(GAME_MENU);
 	}
@@ -190,20 +187,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		}
 	}
 	
-	public void setMusicNow(Sound sound) {
-		soundMenu.soundStop();
-		soundGame.soundStop();
-		
-		musicNow.soundStop();
-		musicNow = sound;
-		musicNow.soundPlay();
+	public void setMusicNow(Audio audio) {
+		this.musicNow.stop();
+		this.musicNow = audio;
+		this.musicNow.play();
 	}
 	
 	public void tick() {
 		if (enableSound) {
-			musicNow.soundPlay();
+			musicNow.play();
 		} else {
-			musicNow.soundStop();
+			musicNow.stop();
 		}
 		
 		if (gameState == GAME_RUN) {
